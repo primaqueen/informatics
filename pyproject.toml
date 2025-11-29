@@ -1,0 +1,47 @@
+[project]
+name = "informatics-fipi-parser"
+version = "0.1.0"
+description = "Парсер страниц банка заданий ФИПИ по информатике."
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = [
+    "beautifulsoup4>=4.12.3",
+    "requests>=2.32.0",
+]
+
+[tool.uv]
+dev-dependencies = [
+    "ruff>=0.7.0",
+    "mypy>=1.13.0",
+    "types-requests>=2.32.0.20241016",
+]
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+lint.select = [
+    "E",  # pycodestyle
+    "F",  # pyflakes
+    "I",  # isort
+    "B",  # flake8-bugbear
+    "UP", # pyupgrade
+]
+lint.ignore = [
+    "E203",
+    "E266",
+]
+
+[tool.ruff.format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = true
+
+[tool.mypy]
+python_version = "3.10"
+warn_unused_configs = true
+warn_redundant_casts = true
+warn_unused_ignores = true
+strict_equality = true
+check_untyped_defs = true
+disallow_untyped_defs = true
+ignore_missing_imports = true

@@ -1,0 +1,1077 @@
+<!DOCTYPE html>
+<html XMLNS:m="http://www.w3.org/1998/Math/MathML">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" /><LINK href="../../styles.css" rel="STYLESHEET" type="text/css">
+<LINK href="../../xmodules/os/img/_styles.css?v=1.04" rel="STYLESHEET" type="text/css">
+<script type="text/javascript" src="../../lib/mml/mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script><script type="text/javascript" src="../../lib/t3utils.js?v=2.04"></script><script type="text/javascript">var home_directory="../../";</script><meta http-equiv="Content-Type" content="text/html; charset=windows-1251">
+<META NAME="Document-state" CONTENT="Dynamic"><META HTTP-EQUIV="pragma" CONTENT="no-cache"><META HTTP-EQUIV="expires" CONTENT="0"><meta http-equiv="X-UA-Compatible" content="IE=10"/><link rel='shortcut icon' href='img/icon.png'><style>@media print {.noprint {display:none !important;}}</style><title>Открытый банк тестовых заданий</title>
+</head>
+<body class='questions-container' style='font-size:11pt'>
+		<script language="javascript">
+        var abort_answer_senging;
+		function onButtonClick(formid = '')
+		{
+			var aform=document.getElementById('checkform'+formid);
+            abort_answer_senging = false;
+            if (formid)
+                eval('setAnswer'+formid+'(aform);');
+            else
+			    setAnswer(aform);
+            if (abort_answer_senging) return;
+			;
+			//aform.submit();
+            if (aform.setBtn)
+                aform.setBtn.disabled=true;
+		}
+		function onResetClick(formid = '')
+		{
+			var aform=document.getElementById('checkform'+formid);
+			var aEl = document.createElement('input');
+			aEl.type = 'hidden';
+			aEl.name = 'reset';
+			aEl.value = 1;
+			aform.appendChild(aEl);
+			
+;
+			aform.submit();
+		}
+
+		function noAction()
+		{
+		}
+
+		</script>
+        <style type="text/css">
+			.img_scroll_container { height: 400px; overflow-y: scroll; text-align: center; width:100%;}
+			.img_scroll_container img { width: 700px }
+            .printbody .img_scroll_container { height: auto; overflow-y: hidden; }
+            .printbody .img_scroll_container img { width: 650px }
+            .active-distractor:hover{cursor:pointer; background-color: #f2f2f2;}
+            .active-distractor.checked-distractor{background-color: #e8e8e8;}
+		</style>
+		<script language="javascript">
+		var qguid='';
+		var qfiles_location='../../';
+
+		function ShowPictureQ(s,hint)
+		{
+			while ((p=s.indexOf(". "))>0)
+			s=s.substring(0,p+1)+s.substring(p+2);
+			document.write('<IMG SRC="'+qfiles_location+s+'" ALIGN=ABSMIDDLE alt="'+hint+'" border="0"> ');
+		}
+
+		function ShowPictureQBL(s,hint,h,bl)
+		{
+			while ((p=s.indexOf(". "))>0)
+			s=s.substring(0,p+1)+s.substring(p+2);
+			var vspace=h/2-bl;
+			if (vspace<0) vspace=-vspace;
+			document.write('<IMG SRC="'+qfiles_location+s+'" ALIGN=MIDDLE border="0" alt="'+hint+'" VSPACE='+(vspace)+' STYLE="position:relative; top:'+(h/2-bl)+'px;">');
+		}
+
+
+		
+		function ShowPictureQ2WH(s,s2,hint,w,h)
+		{
+            if (s.indexOf('.flv')>0 ||s.indexOf('.mp4')>0 ||s.indexOf('.swf')>0)
+                s='../../show_media.php?m='+encodeURIComponent(s)+'&w='+w+'&h='+h;
+
+			w=w+40;
+			h=h+30;
+
+						document.write('<a href="javascript:var wnd=window.open(\''+qfiles_location+s+'\',\'\',\',status=1,resizable=1,menubar=0,scrollbars=1,width='+w+', height='+h+',left='+((screen.width-w)/2)+',top='+((screen.height-h)/2)+'\');wnd.focus();"><IMG BORDER=0 SRC="'+qfiles_location+s2+'" ALIGN=ABSMIDDLE style="cursor:pointer" alt="'+hint+'"></a> ');
+			//alert('вставил картинку!');
+		}
+
+		function ShowPictureQ3WH(s,s2,s3,hint,w,h)
+		{
+			ShowPictureQ2WH(s,s2,hint,w,h);
+		}
+
+		function ShowPictureQ2(s,s2,hint)
+		{
+			ShowPictureQ2WH(s,s2,hint,600,400);
+		};
+
+		function invertImage(img, s, s2)
+		{
+			if (img.src.indexOf(s)>0) img.src=qfiles_location+s2; else img.src=qfiles_location+s;
+		}
+
+		function ShowPictureQ3(s,s2,hint)
+		{
+			while ((p=s.indexOf(". "))>0)
+			s=s.substring(0,p+1)+s.substring(p+2);
+            var onclick=(s.indexOf('.jpg')>0||s.indexOf('.png')>0||s.indexOf('.gif')>0 ?'onclick="invertImage(this, \''+s+'\', \''+s2+'\')"':'');
+			document.write('<IMG SRC="'+qfiles_location+s2+'" '+onclick+' ALIGN=ABSMIDDLE style="cursor:pointer" alt="'+hint+'" border="0"> ');
+		};
+
+		function showXGraphic(xml)
+		{
+			document.write("<object classid=\"CLSID:A40BD42C-2DF9-4DB6-AE58-6411A05C7827\" ID=GraphX, width=258, height=410 ><param name=DEsignMode value=1><param name=\"Buffer\" value='<?xml version=\"1.0\"?>"+xml+"'></object>");
+		}
+		/*
+function ShowPictureQGX2(img,xml)
+{
+w=500;
+h=400;
+document.write('<IMG BORDER=0 SRC="'+qfiles_location+img+'" ALIGN=ABSMIDDLE>');
+}
+*/
+		function ShowPictureQGX2(img,xml)
+		{
+			w=500;
+			h=400;
+			document.write('<a href="javascript:var wnd=window.open(\'../../showxgprahic.php?qguid='+qguid+'&xml='+xml+'\',\'\',\',status=1,resizable=1,menubar=0,scrollbars=1,width='+w+', height='+h+',left='+((screen.width-w)/2)+',top='+((screen.height-h)/2)+'\');wnd.focus();"><IMG BORDER=0 SRC="'+qfiles_location+img+'" ALIGN=ABSMIDDLE style="cursor:pointer"></a> ');
+		}
+
+		</script>
+		<script language='JavaScript'>
+var files_location='';
+var files_abs_location='';
+var space_after_img=true;
+function ShowPicture(s)
+{document.write('<IMG SRC="'+files_location+s+'" ALIGN=absmiddle border=0>'+(space_after_img?' ':''));}
+function ShowPicture2(s,s2,w,h)
+{if (w>800) w=800;
+ if (h>600) h=600;
+ align='ABSMIDDLE'; 
+document.write('<a href="javascript:var wnd=window.open(\''+files_location+s+'\',\'_blank\',\'resizable=1,menubar=0,scrollbars=1,width='+(w+40)+',height='+(h+20)+',left='+((screen.width-w-40)/2)+',top='+((screen.height-h-20)/2)+'\');wnd.focus();"><IMG BORDER=0 SRC="'+files_location+s2+'" ALIGN='+align+'></a>'+(space_after_img?' ':''));}
+function ShowPicture2S(objsrc,imgsrc,datasrc,w,h)
+{ShowPicture2(objsrc,imgsrc,w,h);}
+function ShowPictureBL(s,bl)
+{document.write('<IMG SRC="'+files_location+s+'" ALIGN=MIDDLE VSPACE='+bl+' STYLE="position:relative; top:-'+(bl)+'px;" border=0>');}
+function ShowPictureBL2(s,bl,h)
+{ var vspace=h/2-bl;
+  		if (vspace<0) vspace=-vspace;
+document.write('<IMG SRC="'+files_location+s+'" ALIGN=MIDDLE VSPACE='+((vspace))+' STYLE="position:relative; top:'+(h/2-bl-1)+'px;" border=0>');}
+function ShowPictureGX(img,xml)
+		{
+		w=500;
+		h=400;
+		document.write('<a href="javascript:var wnd=window.open(\'../../showxgprahic.php?xml='+files_abs_location+xml+'\',\'\',\',status=1,resizable=1,menubar=1,scrollbars=1,width='+w+', height='+h+',left='+((screen.width-w)/2)+',top='+((screen.height-h)/2)+'\');wnd.focus();"><IMG BORDER=0 SRC="'+files_location+img+'" ALIGN=ABSMIDDLE style="cursor:pointer"></a> ');
+		}function TraceLink(indx,n)
+{ if (n.charAt(0)=='{')
+  		{
+			var guid=n.substring(1,9)+n.substring(10,14)+n.substring(15,19)+n.substring(20,24)+n.substring(25,37);
+			showdocbyguid(guid);
+  		}
+  		else
+  		{var wnd=window.open('../../tracelink.php?project_guid=B9ACA5BBB2E19E434CD6BEC25284C67F&cdf='+n,'link_wnd','toolbar=1,resizable=1,menubar=0, location=0,scrollbars=1,width=416,height=350,left=0,top=0');
+wnd.focus();
+ }
+}
+function showdocbyguid(guid)
+{var wnd=window.open('../../tracelink.php?project_guid=B9ACA5BBB2E19E434CD6BEC25284C67F&doc_guid='+guid.toUpperCase(),'link_wnd','toolbar=1,resizable=1,menubar=0, location=0,scrollbars=1,width=416,height=350,left=0,top=0');
+wnd.focus();
+}
+function delFile(fguid)
+{
+if (confirm('Удалить файл?'))
+  location.href='delete.php?proj=B9ACA5BBB2E19E434CD6BEC25284C67F&md=qprint&fguid='+fguid}
+function ShowFlash(url)
+{
+			w='100%'; h='100%';
+			url='../../'+files_location+url;
+			document.write('<object tabindex=0 ID=ilFlash classid=CLSID:D27CDB6E-AE6D-11cf-96B8-444553540000 width='+w+' height='+h+' codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0">'+
+		'<param name=movie value="'+url+'"><PARAM play=true><PARAM SWLIVECONNECT=true><PARAM MENU=true><PARAM LOOP=false>'+
+		'<PARAM NAME=scale VALUE=noScale><embed src="'+url+'" quality=high bgcolor=#FFFFFF  width='+w+' height='+h+' scale=noScale type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockWaveFlash"></embed></object>');}
+	function showXGraphic(xml)
+		{
+		//alert("<object classid=\"CLSID:A40BD42C-2DF9-4DB6-AE58-6411A05C7827\" ID=GraphX, width=258, height=410 ><param name=DEsignMode value=0><param name=\"Buffer\" value='<?xml version=\"1.0\"?>"+xml+"'></object>");
+		document.write("<object classid=\"CLSID:A40BD42C-2DF9-4DB6-AE58-6411A05C7827\" ID=GraphX, width=258, height=410 ><param name=DEsignMode value=0><param name=\"Buffer\" value='<?xml version=\"1.0\"?>"+xml+"'></object>");
+		}
+	</script><script type='text/javascript'>
+	var solvedQst = localStorage.getItem("OS:B9ACA5BBB2E19E434CD6BEC25284C67F:SOLVED");
+	solvedQst = solvedQst ? new Set(solvedQst.split(",")): new Set();
+	var favQst = localStorage.getItem("OS:B9ACA5BBB2E19E434CD6BEC25284C67F:FAV");
+	favQst = favQst ? new Set(favQst.split(",")): new Set();
+
+
+
+var request = createAJAXRequest();
+
+function toggleQFavour(qblock) {    var fvbtn = document.getElementById(qblock).getElementsByClassName('favorite-button');
+    toggleFavour(fvbtn[0]);
+}
+
+function toggleFavour(btn) {	btn.classList.toggle('is-favorite');
+    btn.title = btn.classList.contains('is-favorite')?'В Избранном':'Добавить в Избранное';}
+
+function setToStr(set) {	if (browser.isIE) {		let str = '';
+		set.forEach(function(elem){
+		    str += elem + (str?",":"")
+ 	 	});
+ 	 	return str;	} else {		return Array.from(set).join(",")	}}
+
+
+function changeFavour(btn, qst) {	if (btn.classList.contains('is-favorite'))
+	    favQst.delete(qst);
+    else
+        favQst.add(qst);
+    localStorage.setItem("OS:B9ACA5BBB2E19E434CD6BEC25284C67F:FAV", setToStr(favQst));
+	toggleFavour(btn);}
+
+function changeStatus(qst, panel){
+    let answer = solvedQst.has(qst)? '0': '1';
+	if (answer == '0')		solvedQst.delete(qst);
+    else
+        solvedQst.add(qst);
+    localStorage.setItem("OS:B9ACA5BBB2E19E434CD6BEC25284C67F:SOLVED", setToStr(solvedQst));
+    setQSolved(panel, answer)
+}
+
+
+
+function checkButtonClick(form, setanswer, panel) {
+	form = document.getElementById(form);
+	setanswer(form);
+    if (!request.inProcess) {
+        request.open('POST', 'solve.php', true);
+        request.onreadystatechange = checkSolutionDone;
+        request.inProcess = true;
+        request.panel = panel;
+
+        var formData = new FormData(form);
+        formData.append("ajax", "1");
+        formData.append("proj", "B9ACA5BBB2E19E434CD6BEC25284C67F")
+
+		if (browser.isIE)
+			request.qst = form.guid.value;
+		else
+	        request.qst = formData.get("guid");
+
+        request.send(formData);
+
+        panel.getElementsByClassName('task-status')[0].innerHTML = "<img class='loader' src='img/loading_spinner.gif'>";    }
+}
+
+function checkSolutionDone() {    if (request.readyState==4)  {
+        request.inProcess = false;
+        answer = "0";
+        if (request.status==200) {
+            answer = request.responseText;
+        }
+        if (answer!='1' && answer!='2' && answer!='3') {
+        	answer = "0";
+        }
+        qst = request.qst;
+
+        if (answer == '0' || answer == '2')
+    		solvedQst.delete(qst);
+        else
+            solvedQst.add(qst);
+        localStorage.setItem("OS:B9ACA5BBB2E19E434CD6BEC25284C67F:SOLVED", setToStr(solvedQst));
+        setQSolved(request.panel, answer);
+    }
+}
+
+function setQSolved(block, answer) {	if (typeof(block) === 'string')
+	    block = document.getElementById(block);
+	var statusNode = block.getElementsByClassName('task-status')[0];
+    statusNode.className= "task-status task-status-" + answer ;
+    if (answer=='1')
+        statusNode.innerHTML = "РЕШЕНО";
+    else if (answer=='2')
+        statusNode.innerHTML = "НЕВЕРНО";
+    else if (answer=='3')
+        statusNode.innerHTML = "ВЕРНО";
+    else
+        statusNode.innerHTML = "НЕ РЕШЕНО";}
+
+</script>
+
+ <div class="qblock">
+    <div id="hint" class="hint" name="hint">Прочитайте текст и выполните задания.</div> <script language='JavaScript'>
+files_location='../../docs/B9ACA5BBB2E19E434CD6BEC25284C67F/docs/BC1B81AAA1C4891F4E357F9FA097ED6C/';
+files_abs_location='docs/B9ACA5BBB2E19E434CD6BEC25284C67F/docs/BC1B81AAA1C4891F4E357F9FA097ED6C/';
+</script>  </div>  <div class="qblock" id='q68FCA2'> 	    <div id="hint" class="hint" name="hint">Задание №3. Впишите правильный ответ.</div>
+	    		<form action='javascript:noAction()' name='checkform68FCA2' id='checkform68FCA2' method="get"		>
+		<input type="Hidden" name="guid" value="9D61FA9F9D7AAF0349E5883C615992A0">
+		<script language='JavaScript'> 
+ function setAnswer68FCA2(aform)
+ {;}
+ </script><TABLE WIDTH="100%" border='0' bgcolor='gray' cellspacing='1' cellpadding=2>
+  <TR><TD valign=top width=100% bgcolor="#FAFBCA" class='cell_0'>  <p class=MsoNormal>Для игры, описанной в задании 19, найдите значение <i><span lang=EN-US>S</span></i>, при котором одновременно выполняются два условия:</p> <p class=1CxSpFirst><span>-<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span>у Вани есть выигрышная стратегия, позволяющая ему выиграть первым или вторым ходом при любой игре Пети;</span></p> <p class=1CxSpMiddle><span>-<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span>у Вани нет стратегии, которая позволит ему гарантированно выиграть первым ходом.</span></p> <p class=1CxSpMiddle><span>Если найдено несколько значений </span><i><span lang=EN-US>S</span></i><span>, в ответе запишите минимальное из них.</span></p> <p class=1CxSpMiddle><span>&nbsp;</span></p> <p class=1CxSpLast><span>&nbsp;</span></p>  </TD></TR>
+  <TR bgcolor="#FFFFFF"><TD>
+	  <TABLE WIDTH="100%" class='submit-outblock'>
+	  	<TR><TD class='varinats-block'><a name="variants"></a><br><div><table width='100%' cellspacing=0 cellpadding=1><tr><td width=100%><input type=text name="answer" size=40 value="" maxlength="250"></td></tr></table></div><br></TD></TR>
+	  	<TR><TD class='submit-block'></TD></TR>
+	  </TABLE>
+  </TD></TR></TABLE>	</form>
+	<form name='chkcodeform'>
+			<input type='hidden' name='guid' value='9D61FA9F9D7AAF0349E5883C615992A0'>
+			<input type='hidden' name='answer' value="">
+			<input type='hidden' name='chkcode' value=''>
+		</form> </div> <div id='i68FCA2'>
+    <div class="separator"></div>
+    <div class="task-header-panel">
+        <div class="info-button" onclick='this.parentNode.classList.toggle("show-info")'>i</div>
+        <div class="task-info-panel">
+            <div class="task-info-title">
+                <span>СВОЙСТВА ЗАДАНИЯ</span>
+                <span class="task-info-title-close-button" onclick='this.parentNode.parentNode.parentNode.classList.toggle("show-info")'></span>
+            </div>
+            <div class="task-info-content">
+                <table><tbody>
+                    <tr><td class="param-name">КЭС:</td><td class="param-row"><div>2.13 Графы. Основные понятия. Виды графов. Описание графов с помощью матриц смежности, весовых матриц, списков смежности. Решение алгоритмических задач, связанных с анализом графов (построение оптимального пути между вершинами графа, определение количества различных путей между вершинами ориентированного ациклического графа)</div><div>2.14 Деревья. Бинарное дерево. Деревья поиска. Способы обхода дерева. Представление арифметических выражений в виде дерева. Использование графов и деревьев при описании объектов и процессов окружающего мира</div><div>3.2 Оценка сложности вычислений. Время работы и объём используемой памяти, их зависимость от размера исходных данных. Оценка асимптотической сложности алгоритмов. Алгоритмы полиномиальной сложности. Переборные алгоритмы. Примеры различных алгоритмов решения одной задачи, которые имеют различную сложность</div><div>3.3 Определение возможных результатов работы простейших алгоритмов управления исполнителями и вычислительных алгоритмов. Определение исходных данных, при которых алгоритм может дать требуемый результат</div><div>3.10 Массивы и последовательности чисел. Вычисление обобщённых характеристик элементов массива или числовой последовательности (суммы, произведения, среднего арифметического, минимального и максимального элементов, количества элементов, удовлетворяющих заданному условию). Линейный поиск заданного значения в массиве. Алгоритмы работы с элементами массива с однократным просмотром массива. Сортировка одномерного массива. Простые методы сортировки (метод пузырька, метод выбора, сортировка вставками). Сортировка слиянием. Быстрая сортировка массива (алгоритм QuickSort). Двоичный поиск в отсортированном массиве</div><div>3.11 Двумерные массивы (матрицы). Алгоритмы обработки двумерных массивов: заполнение двумерного числового массива по заданным правилам, поиск элемента в двумерном массиве, вычисление максимума (минимума) и суммы элементов двумерного массива, перестановка строк и столбцов двумерного массива</div><div>3.12 Словари (ассоциативные массивы, отображения). Хэш-таблицы. Построение алфавитно-частотного словаря для заданного текста</div><div>3.13 Стеки. Анализ правильности скобочного выражения. Вычисление арифметического выражения, записанного в постфиксной форме. Очереди. Использование очереди для временного хранения данных</div><div>3.14 Алгоритмы на графах. Построение минимального остовного дерева взвешенного связного неориентированного графа. Количество различных путей между вершинами ориентированного ациклического графа. Алгоритм Дейкстры</div><div>3.15 Деревья. Реализация дерева с помощью ссылочных структур. Двоичные (бинарные) деревья. Построение дерева для заданного арифметического выражения. Рекурсивные алгоритмы обхода дерева. Использование стека и очереди для обхода дерева</div></td></tr>                                                                                <tr><td class="param-name">Тип ответа:</td><td>Краткий ответ</td></tr>                                      </tbody></table>
+            </div>
+        </div>
+        <div class="id-text">Номер: <span class="canselect">68FCA2</span></div>
+        <div class="favorite-button" title="Добавить в Избранное" onclick="changeFavour(this,'9D61FA9F9D7AAF0349E5883C615992A0')"></div>
+                         <div class="number-in-group" title="Задание 3 в E59F9F ">
+            <span class="number-in-group-img"></span><span class="number-in-group-text">3 (E59F9F)</span>
+        </div>
+        <div class="answer-panel">
+             <span class="status-title-text hidden-xs">Статус задания:</span>
+             <span class="task-status task-status-0">НЕ РЕШЕНО</span>
+             <span class="answer-button" onclick="checkButtonClick('checkform68FCA2', setAnswer68FCA2, this.parentNode)">Ответить</span>
+        </div>
+
+    </div>
+</div>	    <script type='text/javascript'>
+	        if (favQst.has("9D61FA9F9D7AAF0349E5883C615992A0"))
+	            toggleQFavour('i68FCA2');
+	        if (solvedQst.has("9D61FA9F9D7AAF0349E5883C615992A0"))
+	            setQSolved('i68FCA2', '1');
+	    </script>
+	     <div class="qblock">
+    <div id="hint" class="hint" name="hint">Прочитайте текст и выполните задания.</div> <script language='JavaScript'>
+files_location='../../docs/B9ACA5BBB2E19E434CD6BEC25284C67F/docs/C143D07FC0C8B4774489F0777F3B3FCB/';
+files_abs_location='docs/B9ACA5BBB2E19E434CD6BEC25284C67F/docs/C143D07FC0C8B4774489F0777F3B3FCB/';
+</script>  </div>  <div class="qblock" id='qCCA614'> 	    <div id="hint" class="hint" name="hint">Задание №1. Впишите правильный ответ.</div>
+	    		<form action='javascript:noAction()' name='checkformCCA614' id='checkformCCA614' method="get"		>
+		<input type="Hidden" name="guid" value="5A09AD666B0C8B414E7113040818A4F2">
+		<script language='JavaScript'> 
+ function setAnswerCCA614(aform)
+ {;}
+ </script><TABLE WIDTH="100%" border='0' bgcolor='gray' cellspacing='1' cellpadding=2>
+  <TR><TD valign=top width=100% bgcolor="#FAFBCA" class='cell_0'>  <p class=MsoNormal><a name="_GoBack"></a>Два игрока, Петя и Ваня, играют в следующую игру. Перед игроками лежит куча камней. Игроки ходят по очереди, первый ход делает Петя. За один ход игрок может добавить в кучу <b>один</b> или <b>три </b>камня либо увеличить количество камней в куче <b>в два раза</b>. У каждого игрока есть неограниченное количество камней, чтобы делать ходы.</p> <p class=MsoNormal>Игра завершается в тот момент, когда количество камней в куче становится не менее 435.</p> <p class=MsoNormal>Победителем считается игрок, сделавший последний ход, т.е. первым получивший кучу из 435 камней или больше.</p> <p class=MsoNormal>В начальный момент в куче было <i><span lang=EN-US>S</span></i> камней; 1 &#8804; <i><span lang=EN-US>S</span><span lang=EN-US> </span></i>&#8804; 434.</p> <p class=MsoNormal>Будем говорить, что игрок имеет <i>выигрышную стратегию</i>, если он может выиграть при любых ходах противника. </p> <p class=MsoNormal>Укажите такое значение <i>S</i>, при котором Петя не может выиграть за один ход, но при любом ходе Пети Ваня может выиграть своим первым ходом.</p>  </TD></TR>
+  <TR bgcolor="#FFFFFF"><TD>
+	  <TABLE WIDTH="100%" class='submit-outblock'>
+	  	<TR><TD class='varinats-block'><a name="variants"></a><br><div><table width='100%' cellspacing=0 cellpadding=1><tr><td width=100%><input type=text name="answer" size=40 value="" maxlength="250"></td></tr></table></div><br></TD></TR>
+	  	<TR><TD class='submit-block'></TD></TR>
+	  </TABLE>
+  </TD></TR></TABLE>	</form>
+	<form name='chkcodeform'>
+			<input type='hidden' name='guid' value='5A09AD666B0C8B414E7113040818A4F2'>
+			<input type='hidden' name='answer' value="">
+			<input type='hidden' name='chkcode' value=''>
+		</form> </div> <div id='iCCA614'>
+    <div class="separator"></div>
+    <div class="task-header-panel">
+        <div class="info-button" onclick='this.parentNode.classList.toggle("show-info")'>i</div>
+        <div class="task-info-panel">
+            <div class="task-info-title">
+                <span>СВОЙСТВА ЗАДАНИЯ</span>
+                <span class="task-info-title-close-button" onclick='this.parentNode.parentNode.parentNode.classList.toggle("show-info")'></span>
+            </div>
+            <div class="task-info-content">
+                <table><tbody>
+                    <tr><td class="param-name">КЭС:</td><td class="param-row"><div>2.13 Графы. Основные понятия. Виды графов. Описание графов с помощью матриц смежности, весовых матриц, списков смежности. Решение алгоритмических задач, связанных с анализом графов (построение оптимального пути между вершинами графа, определение количества различных путей между вершинами ориентированного ациклического графа)</div><div>2.14 Деревья. Бинарное дерево. Деревья поиска. Способы обхода дерева. Представление арифметических выражений в виде дерева. Использование графов и деревьев при описании объектов и процессов окружающего мира</div><div>3.2 Оценка сложности вычислений. Время работы и объём используемой памяти, их зависимость от размера исходных данных. Оценка асимптотической сложности алгоритмов. Алгоритмы полиномиальной сложности. Переборные алгоритмы. Примеры различных алгоритмов решения одной задачи, которые имеют различную сложность</div><div>3.3 Определение возможных результатов работы простейших алгоритмов управления исполнителями и вычислительных алгоритмов. Определение исходных данных, при которых алгоритм может дать требуемый результат</div><div>3.10 Массивы и последовательности чисел. Вычисление обобщённых характеристик элементов массива или числовой последовательности (суммы, произведения, среднего арифметического, минимального и максимального элементов, количества элементов, удовлетворяющих заданному условию). Линейный поиск заданного значения в массиве. Алгоритмы работы с элементами массива с однократным просмотром массива. Сортировка одномерного массива. Простые методы сортировки (метод пузырька, метод выбора, сортировка вставками). Сортировка слиянием. Быстрая сортировка массива (алгоритм QuickSort). Двоичный поиск в отсортированном массиве</div><div>3.11 Двумерные массивы (матрицы). Алгоритмы обработки двумерных массивов: заполнение двумерного числового массива по заданным правилам, поиск элемента в двумерном массиве, вычисление максимума (минимума) и суммы элементов двумерного массива, перестановка строк и столбцов двумерного массива</div><div>3.12 Словари (ассоциативные массивы, отображения). Хэш-таблицы. Построение алфавитно-частотного словаря для заданного текста</div><div>3.13 Стеки. Анализ правильности скобочного выражения. Вычисление арифметического выражения, записанного в постфиксной форме. Очереди. Использование очереди для временного хранения данных</div><div>3.14 Алгоритмы на графах. Построение минимального остовного дерева взвешенного связного неориентированного графа. Количество различных путей между вершинами ориентированного ациклического графа. Алгоритм Дейкстры</div><div>3.15 Деревья. Реализация дерева с помощью ссылочных структур. Двоичные (бинарные) деревья. Построение дерева для заданного арифметического выражения. Рекурсивные алгоритмы обхода дерева. Использование стека и очереди для обхода дерева</div></td></tr>                                                                                <tr><td class="param-name">Тип ответа:</td><td>Краткий ответ</td></tr>                                      </tbody></table>
+            </div>
+        </div>
+        <div class="id-text">Номер: <span class="canselect">CCA614</span></div>
+        <div class="favorite-button" title="Добавить в Избранное" onclick="changeFavour(this,'5A09AD666B0C8B414E7113040818A4F2')"></div>
+                         <div class="number-in-group" title="Задание 1 в F674EB ">
+            <span class="number-in-group-img"></span><span class="number-in-group-text">1 (F674EB)</span>
+        </div>
+        <div class="answer-panel">
+             <span class="status-title-text hidden-xs">Статус задания:</span>
+             <span class="task-status task-status-0">НЕ РЕШЕНО</span>
+             <span class="answer-button" onclick="checkButtonClick('checkformCCA614', setAnswerCCA614, this.parentNode)">Ответить</span>
+        </div>
+
+    </div>
+</div>	    <script type='text/javascript'>
+	        if (favQst.has("5A09AD666B0C8B414E7113040818A4F2"))
+	            toggleQFavour('iCCA614');
+	        if (solvedQst.has("5A09AD666B0C8B414E7113040818A4F2"))
+	            setQSolved('iCCA614', '1');
+	    </script>
+	     <div class="qblock" id='qC6E2F6'> 	    <div id="hint" class="hint" name="hint">Задание №2. Впишите правильный ответ.</div>
+	    		<form action='javascript:noAction()' name='checkformC6E2F6' id='checkformC6E2F6' method="get"		>
+		<input type="Hidden" name="guid" value="1ADCD6276E819BD3492B538F981684A3">
+		<script language='JavaScript'>
+    		function setAnswerC6E2F6(aform)
+    		{    			var a = '';
+    			for(var i=0; i<1; i++){   					a += '[';
+    				for(var j=0; j<2; j++){    					a+=(j?';':'')+aform.elements['ans_'+i+'_'+j].value;
+	    			}
+   					a += ']';
+    			}
+    			aform.answer.value=a;    		}
+    		</script><TABLE WIDTH="100%" border='0' bgcolor='gray' cellspacing='1' cellpadding=2>
+  <TR><TD valign=top width=100% bgcolor="#FAFBCA" class='cell_0'>  <table class="MsoNormalTable" border="0" cellspacing="0" cellpadding="0" width="57%"> <tr > <td width="364" valign="top"> <p class="MsoNormal">Для игры, описанной в задании 19, найдите два <b >наименьших</b> значения <i ><span >S</span></i>, при которых у Пети есть выигрышная стратегия, причём одновременно выполняются два условия:</p> <p class="MsoNormalCxSpMiddle"><m:math> <m:semantics> <m:mo>&#x2013;</m:mo> </m:semantics> </m:math>&nbsp;Петя не может выиграть за один ход;</p> <p class="MsoNormalCxSpMiddle"><m:math> <m:semantics> <m:mo>&#x2013;</m:mo> </m:semantics> </m:math>&nbsp;Петя может выиграть своим вторым ходом независимо от того, как будет ходить Ваня.</p> <p class="MsoNormal">Найденные значения запишите в ответе в порядке возрастания.</p> </td> </tr> </table> <p class="MsoNormal"><span>&nbsp;</span></p>  </TD></TR>
+  <TR bgcolor="#FFFFFF"><TD>
+	  <TABLE WIDTH="100%" class='submit-outblock'>
+	  	<TR><TD class='varinats-block'><a name="variants"></a><br><div><table width='100%' cellspacing=0 cellpadding=1><tr><td width=100%><table><tr><td><input type=text name="ans_0_0" style="width:30px;" value="" maxlength="20"></td><td><input type=text name="ans_0_1" style="width:30px;" value="" maxlength="20"></td></tr></table><input type=hidden name=answer></td></tr></table></div><br></TD></TR>
+	  	<TR><TD class='submit-block'></TD></TR>
+	  </TABLE>
+  </TD></TR></TABLE>	</form>
+	<form name='chkcodeform'>
+			<input type='hidden' name='guid' value='1ADCD6276E819BD3492B538F981684A3'>
+			<input type='hidden' name='answer' value="">
+			<input type='hidden' name='chkcode' value=''>
+		</form> </div> <div id='iC6E2F6'>
+    <div class="separator"></div>
+    <div class="task-header-panel">
+        <div class="info-button" onclick='this.parentNode.classList.toggle("show-info")'>i</div>
+        <div class="task-info-panel">
+            <div class="task-info-title">
+                <span>СВОЙСТВА ЗАДАНИЯ</span>
+                <span class="task-info-title-close-button" onclick='this.parentNode.parentNode.parentNode.classList.toggle("show-info")'></span>
+            </div>
+            <div class="task-info-content">
+                <table><tbody>
+                    <tr><td class="param-name">КЭС:</td><td class="param-row"><div>2.13 Графы. Основные понятия. Виды графов. Описание графов с помощью матриц смежности, весовых матриц, списков смежности. Решение алгоритмических задач, связанных с анализом графов (построение оптимального пути между вершинами графа, определение количества различных путей между вершинами ориентированного ациклического графа)</div><div>2.14 Деревья. Бинарное дерево. Деревья поиска. Способы обхода дерева. Представление арифметических выражений в виде дерева. Использование графов и деревьев при описании объектов и процессов окружающего мира</div><div>3.2 Оценка сложности вычислений. Время работы и объём используемой памяти, их зависимость от размера исходных данных. Оценка асимптотической сложности алгоритмов. Алгоритмы полиномиальной сложности. Переборные алгоритмы. Примеры различных алгоритмов решения одной задачи, которые имеют различную сложность</div><div>3.3 Определение возможных результатов работы простейших алгоритмов управления исполнителями и вычислительных алгоритмов. Определение исходных данных, при которых алгоритм может дать требуемый результат</div><div>3.10 Массивы и последовательности чисел. Вычисление обобщённых характеристик элементов массива или числовой последовательности (суммы, произведения, среднего арифметического, минимального и максимального элементов, количества элементов, удовлетворяющих заданному условию). Линейный поиск заданного значения в массиве. Алгоритмы работы с элементами массива с однократным просмотром массива. Сортировка одномерного массива. Простые методы сортировки (метод пузырька, метод выбора, сортировка вставками). Сортировка слиянием. Быстрая сортировка массива (алгоритм QuickSort). Двоичный поиск в отсортированном массиве</div><div>3.11 Двумерные массивы (матрицы). Алгоритмы обработки двумерных массивов: заполнение двумерного числового массива по заданным правилам, поиск элемента в двумерном массиве, вычисление максимума (минимума) и суммы элементов двумерного массива, перестановка строк и столбцов двумерного массива</div><div>3.12 Словари (ассоциативные массивы, отображения). Хэш-таблицы. Построение алфавитно-частотного словаря для заданного текста</div><div>3.13 Стеки. Анализ правильности скобочного выражения. Вычисление арифметического выражения, записанного в постфиксной форме. Очереди. Использование очереди для временного хранения данных</div><div>3.14 Алгоритмы на графах. Построение минимального остовного дерева взвешенного связного неориентированного графа. Количество различных путей между вершинами ориентированного ациклического графа. Алгоритм Дейкстры</div><div>3.15 Деревья. Реализация дерева с помощью ссылочных структур. Двоичные (бинарные) деревья. Построение дерева для заданного арифметического выражения. Рекурсивные алгоритмы обхода дерева. Использование стека и очереди для обхода дерева</div></td></tr>                                                                                <tr><td class="param-name">Тип ответа:</td><td>Краткий ответ</td></tr>                                      </tbody></table>
+            </div>
+        </div>
+        <div class="id-text">Номер: <span class="canselect">C6E2F6</span></div>
+        <div class="favorite-button" title="Добавить в Избранное" onclick="changeFavour(this,'1ADCD6276E819BD3492B538F981684A3')"></div>
+                         <div class="number-in-group" title="Задание 2 в F674EB ">
+            <span class="number-in-group-img"></span><span class="number-in-group-text">2 (F674EB)</span>
+        </div>
+        <div class="answer-panel">
+             <span class="status-title-text hidden-xs">Статус задания:</span>
+             <span class="task-status task-status-0">НЕ РЕШЕНО</span>
+             <span class="answer-button" onclick="checkButtonClick('checkformC6E2F6', setAnswerC6E2F6, this.parentNode)">Ответить</span>
+        </div>
+
+    </div>
+</div>	    <script type='text/javascript'>
+	        if (favQst.has("1ADCD6276E819BD3492B538F981684A3"))
+	            toggleQFavour('iC6E2F6');
+	        if (solvedQst.has("1ADCD6276E819BD3492B538F981684A3"))
+	            setQSolved('iC6E2F6', '1');
+	    </script>
+	     <div class="qblock" id='q1D96A7'> 	    <div id="hint" class="hint" name="hint">Задание №3. Впишите правильный ответ.</div>
+	    		<form action='javascript:noAction()' name='checkform1D96A7' id='checkform1D96A7' method="get"		>
+		<input type="Hidden" name="guid" value="953B7D2E741599D64DE554D00E0A8478">
+		<script language='JavaScript'> 
+ function setAnswer1D96A7(aform)
+ {;}
+ </script><TABLE WIDTH="100%" border='0' bgcolor='gray' cellspacing='1' cellpadding=2>
+  <TR><TD valign=top width=100% bgcolor="#FAFBCA" class='cell_0'>  <p class=MsoNormal><a name="_GoBack"></a>Для игры, описанной в задании 19, найдите <b>минимальное</b> значение <i>S</i>, при котором одновременно выполняются два условия:</p> <p class=MsoNormal>– у Вани есть выигрышная стратегия, позволяющая ему выиграть первым или вторым ходом при любой игре Пети;</p> <p class=MsoNormal>– у Вани нет стратегии, которая позволит ему гарантированно выиграть первым ходом.</p>  </TD></TR>
+  <TR bgcolor="#FFFFFF"><TD>
+	  <TABLE WIDTH="100%" class='submit-outblock'>
+	  	<TR><TD class='varinats-block'><a name="variants"></a><br><div><table width='100%' cellspacing=0 cellpadding=1><tr><td width=100%><input type=text name="answer" size=40 value="" maxlength="250"></td></tr></table></div><br></TD></TR>
+	  	<TR><TD class='submit-block'></TD></TR>
+	  </TABLE>
+  </TD></TR></TABLE>	</form>
+	<form name='chkcodeform'>
+			<input type='hidden' name='guid' value='953B7D2E741599D64DE554D00E0A8478'>
+			<input type='hidden' name='answer' value="">
+			<input type='hidden' name='chkcode' value=''>
+		</form> </div> <div id='i1D96A7'>
+    <div class="separator"></div>
+    <div class="task-header-panel">
+        <div class="info-button" onclick='this.parentNode.classList.toggle("show-info")'>i</div>
+        <div class="task-info-panel">
+            <div class="task-info-title">
+                <span>СВОЙСТВА ЗАДАНИЯ</span>
+                <span class="task-info-title-close-button" onclick='this.parentNode.parentNode.parentNode.classList.toggle("show-info")'></span>
+            </div>
+            <div class="task-info-content">
+                <table><tbody>
+                    <tr><td class="param-name">КЭС:</td><td class="param-row"><div>2.13 Графы. Основные понятия. Виды графов. Описание графов с помощью матриц смежности, весовых матриц, списков смежности. Решение алгоритмических задач, связанных с анализом графов (построение оптимального пути между вершинами графа, определение количества различных путей между вершинами ориентированного ациклического графа)</div><div>2.14 Деревья. Бинарное дерево. Деревья поиска. Способы обхода дерева. Представление арифметических выражений в виде дерева. Использование графов и деревьев при описании объектов и процессов окружающего мира</div><div>3.2 Оценка сложности вычислений. Время работы и объём используемой памяти, их зависимость от размера исходных данных. Оценка асимптотической сложности алгоритмов. Алгоритмы полиномиальной сложности. Переборные алгоритмы. Примеры различных алгоритмов решения одной задачи, которые имеют различную сложность</div><div>3.3 Определение возможных результатов работы простейших алгоритмов управления исполнителями и вычислительных алгоритмов. Определение исходных данных, при которых алгоритм может дать требуемый результат</div><div>3.10 Массивы и последовательности чисел. Вычисление обобщённых характеристик элементов массива или числовой последовательности (суммы, произведения, среднего арифметического, минимального и максимального элементов, количества элементов, удовлетворяющих заданному условию). Линейный поиск заданного значения в массиве. Алгоритмы работы с элементами массива с однократным просмотром массива. Сортировка одномерного массива. Простые методы сортировки (метод пузырька, метод выбора, сортировка вставками). Сортировка слиянием. Быстрая сортировка массива (алгоритм QuickSort). Двоичный поиск в отсортированном массиве</div><div>3.11 Двумерные массивы (матрицы). Алгоритмы обработки двумерных массивов: заполнение двумерного числового массива по заданным правилам, поиск элемента в двумерном массиве, вычисление максимума (минимума) и суммы элементов двумерного массива, перестановка строк и столбцов двумерного массива</div><div>3.12 Словари (ассоциативные массивы, отображения). Хэш-таблицы. Построение алфавитно-частотного словаря для заданного текста</div><div>3.13 Стеки. Анализ правильности скобочного выражения. Вычисление арифметического выражения, записанного в постфиксной форме. Очереди. Использование очереди для временного хранения данных</div><div>3.14 Алгоритмы на графах. Построение минимального остовного дерева взвешенного связного неориентированного графа. Количество различных путей между вершинами ориентированного ациклического графа. Алгоритм Дейкстры</div><div>3.15 Деревья. Реализация дерева с помощью ссылочных структур. Двоичные (бинарные) деревья. Построение дерева для заданного арифметического выражения. Рекурсивные алгоритмы обхода дерева. Использование стека и очереди для обхода дерева</div></td></tr>                                                                                <tr><td class="param-name">Тип ответа:</td><td>Краткий ответ</td></tr>                                      </tbody></table>
+            </div>
+        </div>
+        <div class="id-text">Номер: <span class="canselect">1D96A7</span></div>
+        <div class="favorite-button" title="Добавить в Избранное" onclick="changeFavour(this,'953B7D2E741599D64DE554D00E0A8478')"></div>
+                         <div class="number-in-group" title="Задание 3 в F674EB ">
+            <span class="number-in-group-img"></span><span class="number-in-group-text">3 (F674EB)</span>
+        </div>
+        <div class="answer-panel">
+             <span class="status-title-text hidden-xs">Статус задания:</span>
+             <span class="task-status task-status-0">НЕ РЕШЕНО</span>
+             <span class="answer-button" onclick="checkButtonClick('checkform1D96A7', setAnswer1D96A7, this.parentNode)">Ответить</span>
+        </div>
+
+    </div>
+</div>	    <script type='text/javascript'>
+	        if (favQst.has("953B7D2E741599D64DE554D00E0A8478"))
+	            toggleQFavour('i1D96A7');
+	        if (solvedQst.has("953B7D2E741599D64DE554D00E0A8478"))
+	            setQSolved('i1D96A7', '1');
+	    </script>
+	     <div class="qblock">
+    <div id="hint" class="hint" name="hint">Прочитайте текст и выполните задания.</div> <script language='JavaScript'>
+files_location='../../docs/B9ACA5BBB2E19E434CD6BEC25284C67F/docs/E046AE054EF8982D41C4B8DB856EB631/';
+files_abs_location='docs/B9ACA5BBB2E19E434CD6BEC25284C67F/docs/E046AE054EF8982D41C4B8DB856EB631/';
+</script>  </div>  <div class="qblock" id='qB3864F'> 	    <div id="hint" class="hint" name="hint">Задание №1. Впишите правильный ответ.</div>
+	    		<form action='javascript:noAction()' name='checkformB3864F' id='checkformB3864F' method="get"		>
+		<input type="Hidden" name="guid" value="041FED27B1C3A0874B51B261C60630D8">
+		<script language='JavaScript'> 
+ function setAnswerB3864F(aform)
+ {;}
+ </script><TABLE WIDTH="100%" border='0' bgcolor='gray' cellspacing='1' cellpadding=2>
+  <TR><TD valign=top width=100% bgcolor="#FAFBCA" class='cell_0'>  <p class="MsoNormal">Два игрока, Петя и Ваня, играют в следующую игру. Перед игроками лежит куча камней. Игроки ходят по очереди, первый ход делает Петя. За один ход игрок может добавить в кучу <b >один</b> или <b >четыре </b>камня либо увеличить количество камней в куче <b >в два раза</b>. Например, имея кучу из 12 камней, за один ход можно получить кучу из 13, 16 или 24 камней. У каждого игрока, чтобы делать ходы, есть неограниченное количество камней.</p> <p class="MsoNormal">Игра завершается в тот момент, когда количество камней в куче становится не менее 31.</p> <p class="MsoNormal">Победителем считается игрок, сделавший последний ход, т.е. первым получивший кучу, в которой будет 31 камень или больше.</p> <p class="MsoNormal">В начальный момент в куче было <i ><span >S</span></i> камней; 1 &le; <i ><span >S</span><span> </span></i>&le; 30.</p> <p class="MsoNormal">Будем говорить, что игрок имеет <i >выигрышную стратегию</i>, если он может выиграть при любых ходах противника. Описать стратегию игрока <m:math> <m:semantics> <m:mo>&#x2013;</m:mo> </m:semantics> </m:math>&nbsp;значит описать, какой ход он должен сделать в любой ситуации, которая ему может встретиться при различной игре противника. В описание выигрышной стратегии <b >не следует</b> включать ходы играющего по этой стратегии игрока, не являющиеся для него безусловно выигрышными, т.е. не являющиеся выигрышными независимо от игры противника.</p> <p class="MsoNormal">Укажите такое значение <i >S</i>, при котором Петя не может выиграть за один ход, но при любом ходе Пети Ваня может выиграть своим первым ходом.<span></span></p>  </TD></TR>
+  <TR bgcolor="#FFFFFF"><TD>
+	  <TABLE WIDTH="100%" class='submit-outblock'>
+	  	<TR><TD class='varinats-block'><a name="variants"></a><br><div><table width='100%' cellspacing=0 cellpadding=1><tr><td width=100%><input type=text name="answer" size=40 value="" maxlength="250"></td></tr></table></div><br></TD></TR>
+	  	<TR><TD class='submit-block'></TD></TR>
+	  </TABLE>
+  </TD></TR></TABLE>	</form>
+	<form name='chkcodeform'>
+			<input type='hidden' name='guid' value='041FED27B1C3A0874B51B261C60630D8'>
+			<input type='hidden' name='answer' value="">
+			<input type='hidden' name='chkcode' value=''>
+		</form> </div> <div id='iB3864F'>
+    <div class="separator"></div>
+    <div class="task-header-panel">
+        <div class="info-button" onclick='this.parentNode.classList.toggle("show-info")'>i</div>
+        <div class="task-info-panel">
+            <div class="task-info-title">
+                <span>СВОЙСТВА ЗАДАНИЯ</span>
+                <span class="task-info-title-close-button" onclick='this.parentNode.parentNode.parentNode.classList.toggle("show-info")'></span>
+            </div>
+            <div class="task-info-content">
+                <table><tbody>
+                    <tr><td class="param-name">КЭС:</td><td class="param-row"><div>2.13 Графы. Основные понятия. Виды графов. Описание графов с помощью матриц смежности, весовых матриц, списков смежности. Решение алгоритмических задач, связанных с анализом графов (построение оптимального пути между вершинами графа, определение количества различных путей между вершинами ориентированного ациклического графа)</div><div>2.14 Деревья. Бинарное дерево. Деревья поиска. Способы обхода дерева. Представление арифметических выражений в виде дерева. Использование графов и деревьев при описании объектов и процессов окружающего мира</div><div>3.2 Оценка сложности вычислений. Время работы и объём используемой памяти, их зависимость от размера исходных данных. Оценка асимптотической сложности алгоритмов. Алгоритмы полиномиальной сложности. Переборные алгоритмы. Примеры различных алгоритмов решения одной задачи, которые имеют различную сложность</div><div>3.3 Определение возможных результатов работы простейших алгоритмов управления исполнителями и вычислительных алгоритмов. Определение исходных данных, при которых алгоритм может дать требуемый результат</div><div>3.10 Массивы и последовательности чисел. Вычисление обобщённых характеристик элементов массива или числовой последовательности (суммы, произведения, среднего арифметического, минимального и максимального элементов, количества элементов, удовлетворяющих заданному условию). Линейный поиск заданного значения в массиве. Алгоритмы работы с элементами массива с однократным просмотром массива. Сортировка одномерного массива. Простые методы сортировки (метод пузырька, метод выбора, сортировка вставками). Сортировка слиянием. Быстрая сортировка массива (алгоритм QuickSort). Двоичный поиск в отсортированном массиве</div><div>3.11 Двумерные массивы (матрицы). Алгоритмы обработки двумерных массивов: заполнение двумерного числового массива по заданным правилам, поиск элемента в двумерном массиве, вычисление максимума (минимума) и суммы элементов двумерного массива, перестановка строк и столбцов двумерного массива</div><div>3.12 Словари (ассоциативные массивы, отображения). Хэш-таблицы. Построение алфавитно-частотного словаря для заданного текста</div><div>3.13 Стеки. Анализ правильности скобочного выражения. Вычисление арифметического выражения, записанного в постфиксной форме. Очереди. Использование очереди для временного хранения данных</div><div>3.14 Алгоритмы на графах. Построение минимального остовного дерева взвешенного связного неориентированного графа. Количество различных путей между вершинами ориентированного ациклического графа. Алгоритм Дейкстры</div><div>3.15 Деревья. Реализация дерева с помощью ссылочных структур. Двоичные (бинарные) деревья. Построение дерева для заданного арифметического выражения. Рекурсивные алгоритмы обхода дерева. Использование стека и очереди для обхода дерева</div></td></tr>                                                                                <tr><td class="param-name">Тип ответа:</td><td>Краткий ответ</td></tr>                                      </tbody></table>
+            </div>
+        </div>
+        <div class="id-text">Номер: <span class="canselect">B3864F</span></div>
+        <div class="favorite-button" title="Добавить в Избранное" onclick="changeFavour(this,'041FED27B1C3A0874B51B261C60630D8')"></div>
+                         <div class="number-in-group" title="Задание 1 в 4C233B ">
+            <span class="number-in-group-img"></span><span class="number-in-group-text">1 (4C233B)</span>
+        </div>
+        <div class="answer-panel">
+             <span class="status-title-text hidden-xs">Статус задания:</span>
+             <span class="task-status task-status-0">НЕ РЕШЕНО</span>
+             <span class="answer-button" onclick="checkButtonClick('checkformB3864F', setAnswerB3864F, this.parentNode)">Ответить</span>
+        </div>
+
+    </div>
+</div>	    <script type='text/javascript'>
+	        if (favQst.has("041FED27B1C3A0874B51B261C60630D8"))
+	            toggleQFavour('iB3864F');
+	        if (solvedQst.has("041FED27B1C3A0874B51B261C60630D8"))
+	            setQSolved('iB3864F', '1');
+	    </script>
+	     <div class="qblock" id='q8D8FAB'> 	    <div id="hint" class="hint" name="hint">Задание №2. Впишите правильный ответ.</div>
+	    		<form action='javascript:noAction()' name='checkform8D8FAB' id='checkform8D8FAB' method="get"		>
+		<input type="Hidden" name="guid" value="9F4F714EE47FB56444DB953BF2A339E1">
+		<script language='JavaScript'>
+    		function setAnswer8D8FAB(aform)
+    		{    			var a = '';
+    			for(var i=0; i<1; i++){   					a += '[';
+    				for(var j=0; j<2; j++){    					a+=(j?';':'')+aform.elements['ans_'+i+'_'+j].value;
+	    			}
+   					a += ']';
+    			}
+    			aform.answer.value=a;    		}
+    		</script><TABLE WIDTH="100%" border='0' bgcolor='gray' cellspacing='1' cellpadding=2>
+  <TR><TD valign=top width=100% bgcolor="#FAFBCA" class='cell_0'>  <table class="MsoTableGrid" border="0" cellspacing="0" cellpadding="0" width="57%"> <tr > <td width="997" valign="top"> <p class="MsoNormal">Для игры, описанной в задании 19, найдите два таких значения <i ><span >S</span></i>, при которых у Пети есть выигрышная стратегия, причём одновременно выполняются два условия:</p> <p class="MsoNormalCxSpMiddle"><span>-<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span>Петя не может выиграть за один ход;</p> <p class="MsoNormalCxSpMiddle"><span>-<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span>Петя может выиграть своим вторым ходом независимо от того, как будет ходить Ваня.</p> <p class="MsoNormal">Найденные значения запишите в ответе в порядке возрастания.<span></span></p> </td> </tr> </table> <p class="MsoNormal">&nbsp;</p>  </TD></TR>
+  <TR bgcolor="#FFFFFF"><TD>
+	  <TABLE WIDTH="100%" class='submit-outblock'>
+	  	<TR><TD class='varinats-block'><a name="variants"></a><br><div><table width='100%' cellspacing=0 cellpadding=1><tr><td width=100%><table><tr><td><input type=text name="ans_0_0" style="width:30px;" value="" maxlength="20"></td><td><input type=text name="ans_0_1" style="width:30px;" value="" maxlength="20"></td></tr></table><input type=hidden name=answer></td></tr></table></div><br></TD></TR>
+	  	<TR><TD class='submit-block'></TD></TR>
+	  </TABLE>
+  </TD></TR></TABLE>	</form>
+	<form name='chkcodeform'>
+			<input type='hidden' name='guid' value='9F4F714EE47FB56444DB953BF2A339E1'>
+			<input type='hidden' name='answer' value="">
+			<input type='hidden' name='chkcode' value=''>
+		</form> </div> <div id='i8D8FAB'>
+    <div class="separator"></div>
+    <div class="task-header-panel">
+        <div class="info-button" onclick='this.parentNode.classList.toggle("show-info")'>i</div>
+        <div class="task-info-panel">
+            <div class="task-info-title">
+                <span>СВОЙСТВА ЗАДАНИЯ</span>
+                <span class="task-info-title-close-button" onclick='this.parentNode.parentNode.parentNode.classList.toggle("show-info")'></span>
+            </div>
+            <div class="task-info-content">
+                <table><tbody>
+                    <tr><td class="param-name">КЭС:</td><td class="param-row"><div>2.13 Графы. Основные понятия. Виды графов. Описание графов с помощью матриц смежности, весовых матриц, списков смежности. Решение алгоритмических задач, связанных с анализом графов (построение оптимального пути между вершинами графа, определение количества различных путей между вершинами ориентированного ациклического графа)</div><div>2.14 Деревья. Бинарное дерево. Деревья поиска. Способы обхода дерева. Представление арифметических выражений в виде дерева. Использование графов и деревьев при описании объектов и процессов окружающего мира</div><div>3.2 Оценка сложности вычислений. Время работы и объём используемой памяти, их зависимость от размера исходных данных. Оценка асимптотической сложности алгоритмов. Алгоритмы полиномиальной сложности. Переборные алгоритмы. Примеры различных алгоритмов решения одной задачи, которые имеют различную сложность</div><div>3.3 Определение возможных результатов работы простейших алгоритмов управления исполнителями и вычислительных алгоритмов. Определение исходных данных, при которых алгоритм может дать требуемый результат</div><div>3.10 Массивы и последовательности чисел. Вычисление обобщённых характеристик элементов массива или числовой последовательности (суммы, произведения, среднего арифметического, минимального и максимального элементов, количества элементов, удовлетворяющих заданному условию). Линейный поиск заданного значения в массиве. Алгоритмы работы с элементами массива с однократным просмотром массива. Сортировка одномерного массива. Простые методы сортировки (метод пузырька, метод выбора, сортировка вставками). Сортировка слиянием. Быстрая сортировка массива (алгоритм QuickSort). Двоичный поиск в отсортированном массиве</div><div>3.11 Двумерные массивы (матрицы). Алгоритмы обработки двумерных массивов: заполнение двумерного числового массива по заданным правилам, поиск элемента в двумерном массиве, вычисление максимума (минимума) и суммы элементов двумерного массива, перестановка строк и столбцов двумерного массива</div><div>3.12 Словари (ассоциативные массивы, отображения). Хэш-таблицы. Построение алфавитно-частотного словаря для заданного текста</div><div>3.13 Стеки. Анализ правильности скобочного выражения. Вычисление арифметического выражения, записанного в постфиксной форме. Очереди. Использование очереди для временного хранения данных</div><div>3.14 Алгоритмы на графах. Построение минимального остовного дерева взвешенного связного неориентированного графа. Количество различных путей между вершинами ориентированного ациклического графа. Алгоритм Дейкстры</div><div>3.15 Деревья. Реализация дерева с помощью ссылочных структур. Двоичные (бинарные) деревья. Построение дерева для заданного арифметического выражения. Рекурсивные алгоритмы обхода дерева. Использование стека и очереди для обхода дерева</div></td></tr>                                                                                <tr><td class="param-name">Тип ответа:</td><td>Краткий ответ</td></tr>                                      </tbody></table>
+            </div>
+        </div>
+        <div class="id-text">Номер: <span class="canselect">8D8FAB</span></div>
+        <div class="favorite-button" title="Добавить в Избранное" onclick="changeFavour(this,'9F4F714EE47FB56444DB953BF2A339E1')"></div>
+                         <div class="number-in-group" title="Задание 2 в 4C233B ">
+            <span class="number-in-group-img"></span><span class="number-in-group-text">2 (4C233B)</span>
+        </div>
+        <div class="answer-panel">
+             <span class="status-title-text hidden-xs">Статус задания:</span>
+             <span class="task-status task-status-0">НЕ РЕШЕНО</span>
+             <span class="answer-button" onclick="checkButtonClick('checkform8D8FAB', setAnswer8D8FAB, this.parentNode)">Ответить</span>
+        </div>
+
+    </div>
+</div>	    <script type='text/javascript'>
+	        if (favQst.has("9F4F714EE47FB56444DB953BF2A339E1"))
+	            toggleQFavour('i8D8FAB');
+	        if (solvedQst.has("9F4F714EE47FB56444DB953BF2A339E1"))
+	            setQSolved('i8D8FAB', '1');
+	    </script>
+	     <div class="qblock" id='q40A2E3'> 	    <div id="hint" class="hint" name="hint">Задание №3. Впишите правильный ответ.</div>
+	    		<form action='javascript:noAction()' name='checkform40A2E3' id='checkform40A2E3' method="get"		>
+		<input type="Hidden" name="guid" value="C0E926BD1602BECF4F2815E608187BCE">
+		<script language='JavaScript'> 
+ function setAnswer40A2E3(aform)
+ {;}
+ </script><TABLE WIDTH="100%" border='0' bgcolor='gray' cellspacing='1' cellpadding=2>
+  <TR><TD valign=top width=100% bgcolor="#FAFBCA" class='cell_0'>  <p class="MsoNormal">Для игры, описанной в задании 19, найдите значение <i ><span >S</span></i>, при котором одновременно выполняются два условия:</p> <p class="1CxSpFirst"><span>-<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span>у Вани есть выигрышная стратегия, позволяющая ему выиграть первым или вторым ходом при любой игре Пети;</span></p> <p class="1CxSpMiddle"><span>-<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span></span><span>у Вани нет стратегии, которая позволит ему гарантированно выиграть первым ходом.</span></p> <p class="1CxSpMiddle"><span>Если найдено несколько значений </span><i ><span>S</span></i><span>, в ответе запишите минимальное из них.</span></p> <p class="1CxSpLast"><span>&nbsp;</span></p>  </TD></TR>
+  <TR bgcolor="#FFFFFF"><TD>
+	  <TABLE WIDTH="100%" class='submit-outblock'>
+	  	<TR><TD class='varinats-block'><a name="variants"></a><br><div><table width='100%' cellspacing=0 cellpadding=1><tr><td width=100%><input type=text name="answer" size=40 value="" maxlength="250"></td></tr></table></div><br></TD></TR>
+	  	<TR><TD class='submit-block'></TD></TR>
+	  </TABLE>
+  </TD></TR></TABLE>	</form>
+	<form name='chkcodeform'>
+			<input type='hidden' name='guid' value='C0E926BD1602BECF4F2815E608187BCE'>
+			<input type='hidden' name='answer' value="">
+			<input type='hidden' name='chkcode' value=''>
+		</form> </div> <div id='i40A2E3'>
+    <div class="separator"></div>
+    <div class="task-header-panel">
+        <div class="info-button" onclick='this.parentNode.classList.toggle("show-info")'>i</div>
+        <div class="task-info-panel">
+            <div class="task-info-title">
+                <span>СВОЙСТВА ЗАДАНИЯ</span>
+                <span class="task-info-title-close-button" onclick='this.parentNode.parentNode.parentNode.classList.toggle("show-info")'></span>
+            </div>
+            <div class="task-info-content">
+                <table><tbody>
+                    <tr><td class="param-name">КЭС:</td><td class="param-row"><div>2.13 Графы. Основные понятия. Виды графов. Описание графов с помощью матриц смежности, весовых матриц, списков смежности. Решение алгоритмических задач, связанных с анализом графов (построение оптимального пути между вершинами графа, определение количества различных путей между вершинами ориентированного ациклического графа)</div><div>2.14 Деревья. Бинарное дерево. Деревья поиска. Способы обхода дерева. Представление арифметических выражений в виде дерева. Использование графов и деревьев при описании объектов и процессов окружающего мира</div><div>3.2 Оценка сложности вычислений. Время работы и объём используемой памяти, их зависимость от размера исходных данных. Оценка асимптотической сложности алгоритмов. Алгоритмы полиномиальной сложности. Переборные алгоритмы. Примеры различных алгоритмов решения одной задачи, которые имеют различную сложность</div><div>3.3 Определение возможных результатов работы простейших алгоритмов управления исполнителями и вычислительных алгоритмов. Определение исходных данных, при которых алгоритм может дать требуемый результат</div><div>3.10 Массивы и последовательности чисел. Вычисление обобщённых характеристик элементов массива или числовой последовательности (суммы, произведения, среднего арифметического, минимального и максимального элементов, количества элементов, удовлетворяющих заданному условию). Линейный поиск заданного значения в массиве. Алгоритмы работы с элементами массива с однократным просмотром массива. Сортировка одномерного массива. Простые методы сортировки (метод пузырька, метод выбора, сортировка вставками). Сортировка слиянием. Быстрая сортировка массива (алгоритм QuickSort). Двоичный поиск в отсортированном массиве</div><div>3.11 Двумерные массивы (матрицы). Алгоритмы обработки двумерных массивов: заполнение двумерного числового массива по заданным правилам, поиск элемента в двумерном массиве, вычисление максимума (минимума) и суммы элементов двумерного массива, перестановка строк и столбцов двумерного массива</div><div>3.12 Словари (ассоциативные массивы, отображения). Хэш-таблицы. Построение алфавитно-частотного словаря для заданного текста</div><div>3.13 Стеки. Анализ правильности скобочного выражения. Вычисление арифметического выражения, записанного в постфиксной форме. Очереди. Использование очереди для временного хранения данных</div><div>3.14 Алгоритмы на графах. Построение минимального остовного дерева взвешенного связного неориентированного графа. Количество различных путей между вершинами ориентированного ациклического графа. Алгоритм Дейкстры</div><div>3.15 Деревья. Реализация дерева с помощью ссылочных структур. Двоичные (бинарные) деревья. Построение дерева для заданного арифметического выражения. Рекурсивные алгоритмы обхода дерева. Использование стека и очереди для обхода дерева</div></td></tr>                                                                                <tr><td class="param-name">Тип ответа:</td><td>Краткий ответ</td></tr>                                      </tbody></table>
+            </div>
+        </div>
+        <div class="id-text">Номер: <span class="canselect">40A2E3</span></div>
+        <div class="favorite-button" title="Добавить в Избранное" onclick="changeFavour(this,'C0E926BD1602BECF4F2815E608187BCE')"></div>
+                         <div class="number-in-group" title="Задание 3 в 4C233B ">
+            <span class="number-in-group-img"></span><span class="number-in-group-text">3 (4C233B)</span>
+        </div>
+        <div class="answer-panel">
+             <span class="status-title-text hidden-xs">Статус задания:</span>
+             <span class="task-status task-status-0">НЕ РЕШЕНО</span>
+             <span class="answer-button" onclick="checkButtonClick('checkform40A2E3', setAnswer40A2E3, this.parentNode)">Ответить</span>
+        </div>
+
+    </div>
+</div>	    <script type='text/javascript'>
+	        if (favQst.has("C0E926BD1602BECF4F2815E608187BCE"))
+	            toggleQFavour('i40A2E3');
+	        if (solvedQst.has("C0E926BD1602BECF4F2815E608187BCE"))
+	            setQSolved('i40A2E3', '1');
+	    </script>
+	     <div class="qblock">
+    <div id="hint" class="hint" name="hint">Прочитайте текст и выполните задания.</div> <script language='JavaScript'>
+files_location='../../docs/B9ACA5BBB2E19E434CD6BEC25284C67F/docs/F55D2FD025338CCB415755CEA274C317/';
+files_abs_location='docs/B9ACA5BBB2E19E434CD6BEC25284C67F/docs/F55D2FD025338CCB415755CEA274C317/';
+</script>  </div>  <div class="qblock" id='qDDB46F'> 	    <div id="hint" class="hint" name="hint">Задание №1. Впишите правильный ответ.</div>
+	    		<form action='javascript:noAction()' name='checkformDDB46F' id='checkformDDB46F' method="get"		>
+		<input type="Hidden" name="guid" value="D7147063A71480624990B20E8CCAE4E0">
+		<script language='JavaScript'> 
+ function setAnswerDDB46F(aform)
+ {;}
+ </script><TABLE WIDTH="100%" border='0' bgcolor='gray' cellspacing='1' cellpadding=2>
+  <TR><TD valign=top width=100% bgcolor="#FAFBCA" class='cell_0'>  <p class=MsoNormal><a name="_GoBack"></a>Два игрока, Петя и Ваня, играют в следующую игру. Перед игроками лежит куча камней. Игроки ходят по очереди, первый ход делает Петя. За один ход игрок может добавить в кучу <b>один</b> или <b>три </b>камня либо увеличить количество камней в куче <b>в два раза</b>. У каждого игрока есть неограниченное количество камней, чтобы делать ходы.</p> <p class=MsoNormal>Игра завершается в тот момент, когда количество камней в куче становится не менее 443.</p> <p class=MsoNormal>Победителем считается игрок, сделавший последний ход, т.е. первым получивший кучу из 443 камней или больше.</p> <p class=MsoNormal>В начальный момент в куче было <i><span lang=EN-US>S</span></i> камней; 1 &#8804; <i><span lang=EN-US>S</span><span lang=EN-US> </span></i>&#8804; 442.</p> <p class=MsoNormal>Будем говорить, что игрок имеет <i>выигрышную стратегию</i>, если он может выиграть при любых ходах противника. </p> <p class=MsoNormal>Укажите такое значение <i>S</i>, при котором Петя не может выиграть за один ход, но при любом ходе Пети Ваня может выиграть своим первым ходом.</p>  </TD></TR>
+  <TR bgcolor="#FFFFFF"><TD>
+	  <TABLE WIDTH="100%" class='submit-outblock'>
+	  	<TR><TD class='varinats-block'><a name="variants"></a><br><div><table width='100%' cellspacing=0 cellpadding=1><tr><td width=100%><input type=text name="answer" size=40 value="" maxlength="250"></td></tr></table></div><br></TD></TR>
+	  	<TR><TD class='submit-block'></TD></TR>
+	  </TABLE>
+  </TD></TR></TABLE>	</form>
+	<form name='chkcodeform'>
+			<input type='hidden' name='guid' value='D7147063A71480624990B20E8CCAE4E0'>
+			<input type='hidden' name='answer' value="">
+			<input type='hidden' name='chkcode' value=''>
+		</form> </div> <div id='iDDB46F'>
+    <div class="separator"></div>
+    <div class="task-header-panel">
+        <div class="info-button" onclick='this.parentNode.classList.toggle("show-info")'>i</div>
+        <div class="task-info-panel">
+            <div class="task-info-title">
+                <span>СВОЙСТВА ЗАДАНИЯ</span>
+                <span class="task-info-title-close-button" onclick='this.parentNode.parentNode.parentNode.classList.toggle("show-info")'></span>
+            </div>
+            <div class="task-info-content">
+                <table><tbody>
+                    <tr><td class="param-name">КЭС:</td><td class="param-row"><div>2.13 Графы. Основные понятия. Виды графов. Описание графов с помощью матриц смежности, весовых матриц, списков смежности. Решение алгоритмических задач, связанных с анализом графов (построение оптимального пути между вершинами графа, определение количества различных путей между вершинами ориентированного ациклического графа)</div><div>2.14 Деревья. Бинарное дерево. Деревья поиска. Способы обхода дерева. Представление арифметических выражений в виде дерева. Использование графов и деревьев при описании объектов и процессов окружающего мира</div><div>3.2 Оценка сложности вычислений. Время работы и объём используемой памяти, их зависимость от размера исходных данных. Оценка асимптотической сложности алгоритмов. Алгоритмы полиномиальной сложности. Переборные алгоритмы. Примеры различных алгоритмов решения одной задачи, которые имеют различную сложность</div><div>3.3 Определение возможных результатов работы простейших алгоритмов управления исполнителями и вычислительных алгоритмов. Определение исходных данных, при которых алгоритм может дать требуемый результат</div><div>3.10 Массивы и последовательности чисел. Вычисление обобщённых характеристик элементов массива или числовой последовательности (суммы, произведения, среднего арифметического, минимального и максимального элементов, количества элементов, удовлетворяющих заданному условию). Линейный поиск заданного значения в массиве. Алгоритмы работы с элементами массива с однократным просмотром массива. Сортировка одномерного массива. Простые методы сортировки (метод пузырька, метод выбора, сортировка вставками). Сортировка слиянием. Быстрая сортировка массива (алгоритм QuickSort). Двоичный поиск в отсортированном массиве</div><div>3.11 Двумерные массивы (матрицы). Алгоритмы обработки двумерных массивов: заполнение двумерного числового массива по заданным правилам, поиск элемента в двумерном массиве, вычисление максимума (минимума) и суммы элементов двумерного массива, перестановка строк и столбцов двумерного массива</div><div>3.12 Словари (ассоциативные массивы, отображения). Хэш-таблицы. Построение алфавитно-частотного словаря для заданного текста</div><div>3.13 Стеки. Анализ правильности скобочного выражения. Вычисление арифметического выражения, записанного в постфиксной форме. Очереди. Использование очереди для временного хранения данных</div><div>3.14 Алгоритмы на графах. Построение минимального остовного дерева взвешенного связного неориентированного графа. Количество различных путей между вершинами ориентированного ациклического графа. Алгоритм Дейкстры</div><div>3.15 Деревья. Реализация дерева с помощью ссылочных структур. Двоичные (бинарные) деревья. Построение дерева для заданного арифметического выражения. Рекурсивные алгоритмы обхода дерева. Использование стека и очереди для обхода дерева</div></td></tr>                                                                                <tr><td class="param-name">Тип ответа:</td><td>Краткий ответ</td></tr>                                      </tbody></table>
+            </div>
+        </div>
+        <div class="id-text">Номер: <span class="canselect">DDB46F</span></div>
+        <div class="favorite-button" title="Добавить в Избранное" onclick="changeFavour(this,'D7147063A71480624990B20E8CCAE4E0')"></div>
+                         <div class="number-in-group" title="Задание 1 в 106881 ">
+            <span class="number-in-group-img"></span><span class="number-in-group-text">1 (106881)</span>
+        </div>
+        <div class="answer-panel">
+             <span class="status-title-text hidden-xs">Статус задания:</span>
+             <span class="task-status task-status-0">НЕ РЕШЕНО</span>
+             <span class="answer-button" onclick="checkButtonClick('checkformDDB46F', setAnswerDDB46F, this.parentNode)">Ответить</span>
+        </div>
+
+    </div>
+</div>	    <script type='text/javascript'>
+	        if (favQst.has("D7147063A71480624990B20E8CCAE4E0"))
+	            toggleQFavour('iDDB46F');
+	        if (solvedQst.has("D7147063A71480624990B20E8CCAE4E0"))
+	            setQSolved('iDDB46F', '1');
+	    </script>
+	     <div class="qblock" id='q491919'> 	    <div id="hint" class="hint" name="hint">Задание №2. Впишите правильный ответ.</div>
+	    		<form action='javascript:noAction()' name='checkform491919' id='checkform491919' method="get"		>
+		<input type="Hidden" name="guid" value="50B5BBD89615B92D4CFDBED89CAABDF4">
+		<script language='JavaScript'>
+    		function setAnswer491919(aform)
+    		{    			var a = '';
+    			for(var i=0; i<1; i++){   					a += '[';
+    				for(var j=0; j<2; j++){    					a+=(j?';':'')+aform.elements['ans_'+i+'_'+j].value;
+	    			}
+   					a += ']';
+    			}
+    			aform.answer.value=a;    		}
+    		</script><TABLE WIDTH="100%" border='0' bgcolor='gray' cellspacing='1' cellpadding=2>
+  <TR><TD valign=top width=100% bgcolor="#FAFBCA" class='cell_0'>  <table class="MsoNormalTable" border="0" cellspacing="0" cellpadding="0" width="57%"> <tr > <td width="364" valign="top"> <p class="MsoNormal">Для игры, описанной в задании 19, найдите два <b >наименьших</b> значения <i ><span >S</span></i>, при которых у Пети есть выигрышная стратегия, причём одновременно выполняются два условия:</p> <p class="MsoNormalCxSpMiddle"><m:math> <m:semantics> <m:mo>&#x2013;</m:mo> </m:semantics> </m:math>&nbsp;Петя не может выиграть за один ход;</p> <p class="MsoNormalCxSpMiddle"><m:math> <m:semantics> <m:mo>&#x2013;</m:mo> </m:semantics> </m:math>&nbsp;Петя может выиграть своим вторым ходом независимо от того, как будет ходить Ваня.</p> <p class="MsoNormal">Найденные значения запишите в ответе в порядке возрастания.</p> </td> </tr> </table> <p class="MsoNormal"><span>&nbsp;</span></p>  </TD></TR>
+  <TR bgcolor="#FFFFFF"><TD>
+	  <TABLE WIDTH="100%" class='submit-outblock'>
+	  	<TR><TD class='varinats-block'><a name="variants"></a><br><div><table width='100%' cellspacing=0 cellpadding=1><tr><td width=100%><table><tr><td><input type=text name="ans_0_0" style="width:30px;" value="" maxlength="20"></td><td><input type=text name="ans_0_1" style="width:30px;" value="" maxlength="20"></td></tr></table><input type=hidden name=answer></td></tr></table></div><br></TD></TR>
+	  	<TR><TD class='submit-block'></TD></TR>
+	  </TABLE>
+  </TD></TR></TABLE>	</form>
+	<form name='chkcodeform'>
+			<input type='hidden' name='guid' value='50B5BBD89615B92D4CFDBED89CAABDF4'>
+			<input type='hidden' name='answer' value="">
+			<input type='hidden' name='chkcode' value=''>
+		</form> </div> <div id='i491919'>
+    <div class="separator"></div>
+    <div class="task-header-panel">
+        <div class="info-button" onclick='this.parentNode.classList.toggle("show-info")'>i</div>
+        <div class="task-info-panel">
+            <div class="task-info-title">
+                <span>СВОЙСТВА ЗАДАНИЯ</span>
+                <span class="task-info-title-close-button" onclick='this.parentNode.parentNode.parentNode.classList.toggle("show-info")'></span>
+            </div>
+            <div class="task-info-content">
+                <table><tbody>
+                    <tr><td class="param-name">КЭС:</td><td class="param-row"><div>2.13 Графы. Основные понятия. Виды графов. Описание графов с помощью матриц смежности, весовых матриц, списков смежности. Решение алгоритмических задач, связанных с анализом графов (построение оптимального пути между вершинами графа, определение количества различных путей между вершинами ориентированного ациклического графа)</div><div>2.14 Деревья. Бинарное дерево. Деревья поиска. Способы обхода дерева. Представление арифметических выражений в виде дерева. Использование графов и деревьев при описании объектов и процессов окружающего мира</div><div>3.2 Оценка сложности вычислений. Время работы и объём используемой памяти, их зависимость от размера исходных данных. Оценка асимптотической сложности алгоритмов. Алгоритмы полиномиальной сложности. Переборные алгоритмы. Примеры различных алгоритмов решения одной задачи, которые имеют различную сложность</div><div>3.3 Определение возможных результатов работы простейших алгоритмов управления исполнителями и вычислительных алгоритмов. Определение исходных данных, при которых алгоритм может дать требуемый результат</div><div>3.10 Массивы и последовательности чисел. Вычисление обобщённых характеристик элементов массива или числовой последовательности (суммы, произведения, среднего арифметического, минимального и максимального элементов, количества элементов, удовлетворяющих заданному условию). Линейный поиск заданного значения в массиве. Алгоритмы работы с элементами массива с однократным просмотром массива. Сортировка одномерного массива. Простые методы сортировки (метод пузырька, метод выбора, сортировка вставками). Сортировка слиянием. Быстрая сортировка массива (алгоритм QuickSort). Двоичный поиск в отсортированном массиве</div><div>3.11 Двумерные массивы (матрицы). Алгоритмы обработки двумерных массивов: заполнение двумерного числового массива по заданным правилам, поиск элемента в двумерном массиве, вычисление максимума (минимума) и суммы элементов двумерного массива, перестановка строк и столбцов двумерного массива</div><div>3.12 Словари (ассоциативные массивы, отображения). Хэш-таблицы. Построение алфавитно-частотного словаря для заданного текста</div><div>3.13 Стеки. Анализ правильности скобочного выражения. Вычисление арифметического выражения, записанного в постфиксной форме. Очереди. Использование очереди для временного хранения данных</div><div>3.14 Алгоритмы на графах. Построение минимального остовного дерева взвешенного связного неориентированного графа. Количество различных путей между вершинами ориентированного ациклического графа. Алгоритм Дейкстры</div><div>3.15 Деревья. Реализация дерева с помощью ссылочных структур. Двоичные (бинарные) деревья. Построение дерева для заданного арифметического выражения. Рекурсивные алгоритмы обхода дерева. Использование стека и очереди для обхода дерева</div></td></tr>                                                                                <tr><td class="param-name">Тип ответа:</td><td>Краткий ответ</td></tr>                                      </tbody></table>
+            </div>
+        </div>
+        <div class="id-text">Номер: <span class="canselect">491919</span></div>
+        <div class="favorite-button" title="Добавить в Избранное" onclick="changeFavour(this,'50B5BBD89615B92D4CFDBED89CAABDF4')"></div>
+                         <div class="number-in-group" title="Задание 2 в 106881 ">
+            <span class="number-in-group-img"></span><span class="number-in-group-text">2 (106881)</span>
+        </div>
+        <div class="answer-panel">
+             <span class="status-title-text hidden-xs">Статус задания:</span>
+             <span class="task-status task-status-0">НЕ РЕШЕНО</span>
+             <span class="answer-button" onclick="checkButtonClick('checkform491919', setAnswer491919, this.parentNode)">Ответить</span>
+        </div>
+
+    </div>
+</div>	    <script type='text/javascript'>
+	        if (favQst.has("50B5BBD89615B92D4CFDBED89CAABDF4"))
+	            toggleQFavour('i491919');
+	        if (solvedQst.has("50B5BBD89615B92D4CFDBED89CAABDF4"))
+	            setQSolved('i491919', '1');
+	    </script>
+	     <div class="qblock" id='qEF02C6'> 	    <div id="hint" class="hint" name="hint">Задание №3. Впишите правильный ответ.</div>
+	    		<form action='javascript:noAction()' name='checkformEF02C6' id='checkformEF02C6' method="get"		>
+		<input type="Hidden" name="guid" value="ACD216F62863800A45CBB67DD631C317">
+		<script language='JavaScript'> 
+ function setAnswerEF02C6(aform)
+ {;}
+ </script><TABLE WIDTH="100%" border='0' bgcolor='gray' cellspacing='1' cellpadding=2>
+  <TR><TD valign=top width=100% bgcolor="#FAFBCA" class='cell_0'>  <p class=MsoNormal><a name="_GoBack"></a>Для игры, описанной в задании 19, найдите <b>минимальное</b> значение <i>S</i>, при котором одновременно выполняются два условия:</p> <p class=MsoNormal>– у Вани есть выигрышная стратегия, позволяющая ему выиграть первым или вторым ходом при любой игре Пети;</p> <p class=MsoNormal>– у Вани нет стратегии, которая позволит ему гарантированно выиграть первым ходом.</p>  </TD></TR>
+  <TR bgcolor="#FFFFFF"><TD>
+	  <TABLE WIDTH="100%" class='submit-outblock'>
+	  	<TR><TD class='varinats-block'><a name="variants"></a><br><div><table width='100%' cellspacing=0 cellpadding=1><tr><td width=100%><input type=text name="answer" size=40 value="" maxlength="250"></td></tr></table></div><br></TD></TR>
+	  	<TR><TD class='submit-block'></TD></TR>
+	  </TABLE>
+  </TD></TR></TABLE>	</form>
+	<form name='chkcodeform'>
+			<input type='hidden' name='guid' value='ACD216F62863800A45CBB67DD631C317'>
+			<input type='hidden' name='answer' value="">
+			<input type='hidden' name='chkcode' value=''>
+		</form> </div> <div id='iEF02C6'>
+    <div class="separator"></div>
+    <div class="task-header-panel">
+        <div class="info-button" onclick='this.parentNode.classList.toggle("show-info")'>i</div>
+        <div class="task-info-panel">
+            <div class="task-info-title">
+                <span>СВОЙСТВА ЗАДАНИЯ</span>
+                <span class="task-info-title-close-button" onclick='this.parentNode.parentNode.parentNode.classList.toggle("show-info")'></span>
+            </div>
+            <div class="task-info-content">
+                <table><tbody>
+                    <tr><td class="param-name">КЭС:</td><td class="param-row"><div>2.13 Графы. Основные понятия. Виды графов. Описание графов с помощью матриц смежности, весовых матриц, списков смежности. Решение алгоритмических задач, связанных с анализом графов (построение оптимального пути между вершинами графа, определение количества различных путей между вершинами ориентированного ациклического графа)</div><div>2.14 Деревья. Бинарное дерево. Деревья поиска. Способы обхода дерева. Представление арифметических выражений в виде дерева. Использование графов и деревьев при описании объектов и процессов окружающего мира</div><div>3.2 Оценка сложности вычислений. Время работы и объём используемой памяти, их зависимость от размера исходных данных. Оценка асимптотической сложности алгоритмов. Алгоритмы полиномиальной сложности. Переборные алгоритмы. Примеры различных алгоритмов решения одной задачи, которые имеют различную сложность</div><div>3.3 Определение возможных результатов работы простейших алгоритмов управления исполнителями и вычислительных алгоритмов. Определение исходных данных, при которых алгоритм может дать требуемый результат</div><div>3.10 Массивы и последовательности чисел. Вычисление обобщённых характеристик элементов массива или числовой последовательности (суммы, произведения, среднего арифметического, минимального и максимального элементов, количества элементов, удовлетворяющих заданному условию). Линейный поиск заданного значения в массиве. Алгоритмы работы с элементами массива с однократным просмотром массива. Сортировка одномерного массива. Простые методы сортировки (метод пузырька, метод выбора, сортировка вставками). Сортировка слиянием. Быстрая сортировка массива (алгоритм QuickSort). Двоичный поиск в отсортированном массиве</div><div>3.11 Двумерные массивы (матрицы). Алгоритмы обработки двумерных массивов: заполнение двумерного числового массива по заданным правилам, поиск элемента в двумерном массиве, вычисление максимума (минимума) и суммы элементов двумерного массива, перестановка строк и столбцов двумерного массива</div><div>3.12 Словари (ассоциативные массивы, отображения). Хэш-таблицы. Построение алфавитно-частотного словаря для заданного текста</div><div>3.13 Стеки. Анализ правильности скобочного выражения. Вычисление арифметического выражения, записанного в постфиксной форме. Очереди. Использование очереди для временного хранения данных</div><div>3.14 Алгоритмы на графах. Построение минимального остовного дерева взвешенного связного неориентированного графа. Количество различных путей между вершинами ориентированного ациклического графа. Алгоритм Дейкстры</div><div>3.15 Деревья. Реализация дерева с помощью ссылочных структур. Двоичные (бинарные) деревья. Построение дерева для заданного арифметического выражения. Рекурсивные алгоритмы обхода дерева. Использование стека и очереди для обхода дерева</div></td></tr>                                                                                <tr><td class="param-name">Тип ответа:</td><td>Краткий ответ</td></tr>                                      </tbody></table>
+            </div>
+        </div>
+        <div class="id-text">Номер: <span class="canselect">EF02C6</span></div>
+        <div class="favorite-button" title="Добавить в Избранное" onclick="changeFavour(this,'ACD216F62863800A45CBB67DD631C317')"></div>
+                         <div class="number-in-group" title="Задание 3 в 106881 ">
+            <span class="number-in-group-img"></span><span class="number-in-group-text">3 (106881)</span>
+        </div>
+        <div class="answer-panel">
+             <span class="status-title-text hidden-xs">Статус задания:</span>
+             <span class="task-status task-status-0">НЕ РЕШЕНО</span>
+             <span class="answer-button" onclick="checkButtonClick('checkformEF02C6', setAnswerEF02C6, this.parentNode)">Ответить</span>
+        </div>
+
+    </div>
+</div>	    <script type='text/javascript'>
+	        if (favQst.has("ACD216F62863800A45CBB67DD631C317"))
+	            toggleQFavour('iEF02C6');
+	        if (solvedQst.has("ACD216F62863800A45CBB67DD631C317"))
+	            setQSolved('iEF02C6', '1');
+	    </script>
+	     <div class="qblock">
+    <div id="hint" class="hint" name="hint">Прочитайте текст и выполните задания.</div> <script language='JavaScript'>
+files_location='../../docs/B9ACA5BBB2E19E434CD6BEC25284C67F/docs/F7E6B54F80FB913E457C4B6F9798657F/';
+files_abs_location='docs/B9ACA5BBB2E19E434CD6BEC25284C67F/docs/F7E6B54F80FB913E457C4B6F9798657F/';
+</script>  </div>  <div class="qblock" id='qCD3364'> 	    <div id="hint" class="hint" name="hint">Задание №1. Впишите правильный ответ.</div>
+	    		<form action='javascript:noAction()' name='checkformCD3364' id='checkformCD3364' method="get"		>
+		<input type="Hidden" name="guid" value="DA0E7E90B33482354F837C62CE81173F">
+		<script language='JavaScript'> 
+ function setAnswerCD3364(aform)
+ {;}
+ </script><TABLE WIDTH="100%" border='0' bgcolor='gray' cellspacing='1' cellpadding=2>
+  <TR><TD valign=top width=100% bgcolor="#FAFBCA" class='cell_0'>  <p class=MsoNormal><a name="_GoBack"></a>Два игрока, Петя и Ваня, играют в следующую игру. Перед игроками лежит куча камней. Игроки ходят по очереди, первый ход делает Петя. За один ход игрок может добавить в кучу <b>один</b> или <b>четыре </b>камня либо увеличить количество камней в куче <b>в три раза</b>. Для того чтобы делать ходы, у каждого игрока есть неограниченное количество камней.</p> <p class=MsoNormal>Игра завершается в тот момент, когда количество камней в куче становится не менее 82.</p> <p class=MsoNormal>Победителем считается игрок, сделавший последний ход, т.е. первым получивший кучу, состоящую из 82 или более камней.</p> <p class=MsoNormal>В начальный момент в куче было <i><span lang=EN-US>S</span></i> камней; 1 &#8804; <i><span lang=EN-US>S</span><span lang=EN-US> </span></i>&#8804; 81.</p> <p class=MsoNormal>Будем говорить, что игрок имеет <i>выигрышную стратегию</i>, если он может выиграть при любых ходах противника.</p> <p class=MsoNormal>Укажите такое значение <i>S</i>, при котором Петя не может выиграть за один ход, но при любом ходе Пети Ваня может выиграть своим первым ходом.</p>  </TD></TR>
+  <TR bgcolor="#FFFFFF"><TD>
+	  <TABLE WIDTH="100%" class='submit-outblock'>
+	  	<TR><TD class='varinats-block'><a name="variants"></a><br><div><table width='100%' cellspacing=0 cellpadding=1><tr><td width=100%><input type=text name="answer" size=40 value="" maxlength="250"></td></tr></table></div><br></TD></TR>
+	  	<TR><TD class='submit-block'></TD></TR>
+	  </TABLE>
+  </TD></TR></TABLE>	</form>
+	<form name='chkcodeform'>
+			<input type='hidden' name='guid' value='DA0E7E90B33482354F837C62CE81173F'>
+			<input type='hidden' name='answer' value="">
+			<input type='hidden' name='chkcode' value=''>
+		</form> </div> <div id='iCD3364'>
+    <div class="separator"></div>
+    <div class="task-header-panel">
+        <div class="info-button" onclick='this.parentNode.classList.toggle("show-info")'>i</div>
+        <div class="task-info-panel">
+            <div class="task-info-title">
+                <span>СВОЙСТВА ЗАДАНИЯ</span>
+                <span class="task-info-title-close-button" onclick='this.parentNode.parentNode.parentNode.classList.toggle("show-info")'></span>
+            </div>
+            <div class="task-info-content">
+                <table><tbody>
+                    <tr><td class="param-name">КЭС:</td><td class="param-row"><div>2.13 Графы. Основные понятия. Виды графов. Описание графов с помощью матриц смежности, весовых матриц, списков смежности. Решение алгоритмических задач, связанных с анализом графов (построение оптимального пути между вершинами графа, определение количества различных путей между вершинами ориентированного ациклического графа)</div><div>2.14 Деревья. Бинарное дерево. Деревья поиска. Способы обхода дерева. Представление арифметических выражений в виде дерева. Использование графов и деревьев при описании объектов и процессов окружающего мира</div><div>3.2 Оценка сложности вычислений. Время работы и объём используемой памяти, их зависимость от размера исходных данных. Оценка асимптотической сложности алгоритмов. Алгоритмы полиномиальной сложности. Переборные алгоритмы. Примеры различных алгоритмов решения одной задачи, которые имеют различную сложность</div><div>3.3 Определение возможных результатов работы простейших алгоритмов управления исполнителями и вычислительных алгоритмов. Определение исходных данных, при которых алгоритм может дать требуемый результат</div><div>3.10 Массивы и последовательности чисел. Вычисление обобщённых характеристик элементов массива или числовой последовательности (суммы, произведения, среднего арифметического, минимального и максимального элементов, количества элементов, удовлетворяющих заданному условию). Линейный поиск заданного значения в массиве. Алгоритмы работы с элементами массива с однократным просмотром массива. Сортировка одномерного массива. Простые методы сортировки (метод пузырька, метод выбора, сортировка вставками). Сортировка слиянием. Быстрая сортировка массива (алгоритм QuickSort). Двоичный поиск в отсортированном массиве</div><div>3.11 Двумерные массивы (матрицы). Алгоритмы обработки двумерных массивов: заполнение двумерного числового массива по заданным правилам, поиск элемента в двумерном массиве, вычисление максимума (минимума) и суммы элементов двумерного массива, перестановка строк и столбцов двумерного массива</div><div>3.12 Словари (ассоциативные массивы, отображения). Хэш-таблицы. Построение алфавитно-частотного словаря для заданного текста</div><div>3.13 Стеки. Анализ правильности скобочного выражения. Вычисление арифметического выражения, записанного в постфиксной форме. Очереди. Использование очереди для временного хранения данных</div><div>3.14 Алгоритмы на графах. Построение минимального остовного дерева взвешенного связного неориентированного графа. Количество различных путей между вершинами ориентированного ациклического графа. Алгоритм Дейкстры</div><div>3.15 Деревья. Реализация дерева с помощью ссылочных структур. Двоичные (бинарные) деревья. Построение дерева для заданного арифметического выражения. Рекурсивные алгоритмы обхода дерева. Использование стека и очереди для обхода дерева</div></td></tr>                                                                                <tr><td class="param-name">Тип ответа:</td><td>Краткий ответ</td></tr>                                      </tbody></table>
+            </div>
+        </div>
+        <div class="id-text">Номер: <span class="canselect">CD3364</span></div>
+        <div class="favorite-button" title="Добавить в Избранное" onclick="changeFavour(this,'DA0E7E90B33482354F837C62CE81173F')"></div>
+                         <div class="number-in-group" title="Задание 1 в D92183 ">
+            <span class="number-in-group-img"></span><span class="number-in-group-text">1 (D92183)</span>
+        </div>
+        <div class="answer-panel">
+             <span class="status-title-text hidden-xs">Статус задания:</span>
+             <span class="task-status task-status-0">НЕ РЕШЕНО</span>
+             <span class="answer-button" onclick="checkButtonClick('checkformCD3364', setAnswerCD3364, this.parentNode)">Ответить</span>
+        </div>
+
+    </div>
+</div>	    <script type='text/javascript'>
+	        if (favQst.has("DA0E7E90B33482354F837C62CE81173F"))
+	            toggleQFavour('iCD3364');
+	        if (solvedQst.has("DA0E7E90B33482354F837C62CE81173F"))
+	            setQSolved('iCD3364', '1');
+	    </script>
+	     <div class="qblock" id='q913CFB'> 	    <div id="hint" class="hint" name="hint">Задание №2. Впишите правильный ответ.</div>
+	    		<form action='javascript:noAction()' name='checkform913CFB' id='checkform913CFB' method="get"		>
+		<input type="Hidden" name="guid" value="1B4E5AC3EDF380264BBE23C046FFDBB8">
+		<script language='JavaScript'>
+    		function setAnswer913CFB(aform)
+    		{    			var a = '';
+    			for(var i=0; i<1; i++){   					a += '[';
+    				for(var j=0; j<2; j++){    					a+=(j?';':'')+aform.elements['ans_'+i+'_'+j].value;
+	    			}
+   					a += ']';
+    			}
+    			aform.answer.value=a;    		}
+    		</script><TABLE WIDTH="100%" border='0' bgcolor='gray' cellspacing='1' cellpadding=2>
+  <TR><TD valign=top width=100% bgcolor="#FAFBCA" class='cell_0'>  <table class=MsoNormalTable border=0 cellspacing=0 cellpadding=0 width="57%"> <tr> <td width=404 valign=top> <p class=MsoNormal>Для игры, описанной в задании 19, найдите два таких <b>минимальных </b>значения <i>S</i>, при которых у Пети есть выигрышная стратегия, причём одновременно выполняются два условия:</p> <p class=MsoNormal>&#8722;&nbsp;Петя не может выиграть за один ход;</p> <p class=MsoNormal>&#8722;&nbsp;Петя может выиграть своим вторым ходом независимо от того, как будет ходить Ваня.</p> <p class=MsoNormal>Найденные значения запишите в ответе в порядке возрастания.</p> </td> </tr> </table> <p class=MsoNormal>&nbsp;</p>  </TD></TR>
+  <TR bgcolor="#FFFFFF"><TD>
+	  <TABLE WIDTH="100%" class='submit-outblock'>
+	  	<TR><TD class='varinats-block'><a name="variants"></a><br><div><table width='100%' cellspacing=0 cellpadding=1><tr><td width=100%><table><tr><td><input type=text name="ans_0_0" style="width:30px;" value="" maxlength="20"></td><td><input type=text name="ans_0_1" style="width:30px;" value="" maxlength="20"></td></tr></table><input type=hidden name=answer></td></tr></table></div><br></TD></TR>
+	  	<TR><TD class='submit-block'></TD></TR>
+	  </TABLE>
+  </TD></TR></TABLE>	</form>
+	<form name='chkcodeform'>
+			<input type='hidden' name='guid' value='1B4E5AC3EDF380264BBE23C046FFDBB8'>
+			<input type='hidden' name='answer' value="">
+			<input type='hidden' name='chkcode' value=''>
+		</form> </div> <div id='i913CFB'>
+    <div class="separator"></div>
+    <div class="task-header-panel">
+        <div class="info-button" onclick='this.parentNode.classList.toggle("show-info")'>i</div>
+        <div class="task-info-panel">
+            <div class="task-info-title">
+                <span>СВОЙСТВА ЗАДАНИЯ</span>
+                <span class="task-info-title-close-button" onclick='this.parentNode.parentNode.parentNode.classList.toggle("show-info")'></span>
+            </div>
+            <div class="task-info-content">
+                <table><tbody>
+                    <tr><td class="param-name">КЭС:</td><td class="param-row"><div>2.13 Графы. Основные понятия. Виды графов. Описание графов с помощью матриц смежности, весовых матриц, списков смежности. Решение алгоритмических задач, связанных с анализом графов (построение оптимального пути между вершинами графа, определение количества различных путей между вершинами ориентированного ациклического графа)</div><div>2.14 Деревья. Бинарное дерево. Деревья поиска. Способы обхода дерева. Представление арифметических выражений в виде дерева. Использование графов и деревьев при описании объектов и процессов окружающего мира</div><div>3.2 Оценка сложности вычислений. Время работы и объём используемой памяти, их зависимость от размера исходных данных. Оценка асимптотической сложности алгоритмов. Алгоритмы полиномиальной сложности. Переборные алгоритмы. Примеры различных алгоритмов решения одной задачи, которые имеют различную сложность</div><div>3.3 Определение возможных результатов работы простейших алгоритмов управления исполнителями и вычислительных алгоритмов. Определение исходных данных, при которых алгоритм может дать требуемый результат</div><div>3.10 Массивы и последовательности чисел. Вычисление обобщённых характеристик элементов массива или числовой последовательности (суммы, произведения, среднего арифметического, минимального и максимального элементов, количества элементов, удовлетворяющих заданному условию). Линейный поиск заданного значения в массиве. Алгоритмы работы с элементами массива с однократным просмотром массива. Сортировка одномерного массива. Простые методы сортировки (метод пузырька, метод выбора, сортировка вставками). Сортировка слиянием. Быстрая сортировка массива (алгоритм QuickSort). Двоичный поиск в отсортированном массиве</div><div>3.11 Двумерные массивы (матрицы). Алгоритмы обработки двумерных массивов: заполнение двумерного числового массива по заданным правилам, поиск элемента в двумерном массиве, вычисление максимума (минимума) и суммы элементов двумерного массива, перестановка строк и столбцов двумерного массива</div><div>3.12 Словари (ассоциативные массивы, отображения). Хэш-таблицы. Построение алфавитно-частотного словаря для заданного текста</div><div>3.13 Стеки. Анализ правильности скобочного выражения. Вычисление арифметического выражения, записанного в постфиксной форме. Очереди. Использование очереди для временного хранения данных</div><div>3.14 Алгоритмы на графах. Построение минимального остовного дерева взвешенного связного неориентированного графа. Количество различных путей между вершинами ориентированного ациклического графа. Алгоритм Дейкстры</div><div>3.15 Деревья. Реализация дерева с помощью ссылочных структур. Двоичные (бинарные) деревья. Построение дерева для заданного арифметического выражения. Рекурсивные алгоритмы обхода дерева. Использование стека и очереди для обхода дерева</div></td></tr>                                                                                <tr><td class="param-name">Тип ответа:</td><td>Краткий ответ</td></tr>                                      </tbody></table>
+            </div>
+        </div>
+        <div class="id-text">Номер: <span class="canselect">913CFB</span></div>
+        <div class="favorite-button" title="Добавить в Избранное" onclick="changeFavour(this,'1B4E5AC3EDF380264BBE23C046FFDBB8')"></div>
+                         <div class="number-in-group" title="Задание 2 в D92183 ">
+            <span class="number-in-group-img"></span><span class="number-in-group-text">2 (D92183)</span>
+        </div>
+        <div class="answer-panel">
+             <span class="status-title-text hidden-xs">Статус задания:</span>
+             <span class="task-status task-status-0">НЕ РЕШЕНО</span>
+             <span class="answer-button" onclick="checkButtonClick('checkform913CFB', setAnswer913CFB, this.parentNode)">Ответить</span>
+        </div>
+
+    </div>
+</div>	    <script type='text/javascript'>
+	        if (favQst.has("1B4E5AC3EDF380264BBE23C046FFDBB8"))
+	            toggleQFavour('i913CFB');
+	        if (solvedQst.has("1B4E5AC3EDF380264BBE23C046FFDBB8"))
+	            setQSolved('i913CFB', '1');
+	    </script>
+	     <div class="qblock" id='q18D81B'> 	    <div id="hint" class="hint" name="hint">Задание №3. Впишите правильный ответ.</div>
+	    		<form action='javascript:noAction()' name='checkform18D81B' id='checkform18D81B' method="get"		>
+		<input type="Hidden" name="guid" value="5547FF69A87EAA15450A2116DC08B5EE">
+		<script language='JavaScript'> 
+ function setAnswer18D81B(aform)
+ {;}
+ </script><TABLE WIDTH="100%" border='0' bgcolor='gray' cellspacing='1' cellpadding=2>
+  <TR><TD valign=top width=100% bgcolor="#FAFBCA" class='cell_0'>  <p class=MsoNormal><a name="_GoBack"></a>Для игры, описанной в задании 19, найдите <b>минимальное</b> значение <i>S</i>, при котором одновременно выполняются два условия:</p> <p class=MsoNormal>–&nbsp;у Вани есть выигрышная стратегия, позволяющая ему выиграть первым или вторым ходом при любой игре Пети;</p> <p class=MsoNormal>–&nbsp;у Вани нет стратегии, которая позволит ему гарантированно выиграть первым ходом.</p> <p class=MsoNormal>Если найдено несколько значений <i><span lang=EN-US>S</span></i>, в ответе запишите наименьшее из них.</p>  </TD></TR>
+  <TR bgcolor="#FFFFFF"><TD>
+	  <TABLE WIDTH="100%" class='submit-outblock'>
+	  	<TR><TD class='varinats-block'><a name="variants"></a><br><div><table width='100%' cellspacing=0 cellpadding=1><tr><td width=100%><input type=text name="answer" size=40 value="" maxlength="250"></td></tr></table></div><br></TD></TR>
+	  	<TR><TD class='submit-block'></TD></TR>
+	  </TABLE>
+  </TD></TR></TABLE>	</form>
+	<form name='chkcodeform'>
+			<input type='hidden' name='guid' value='5547FF69A87EAA15450A2116DC08B5EE'>
+			<input type='hidden' name='answer' value="">
+			<input type='hidden' name='chkcode' value=''>
+		</form> </div> <div id='i18D81B'>
+    <div class="separator"></div>
+    <div class="task-header-panel">
+        <div class="info-button" onclick='this.parentNode.classList.toggle("show-info")'>i</div>
+        <div class="task-info-panel">
+            <div class="task-info-title">
+                <span>СВОЙСТВА ЗАДАНИЯ</span>
+                <span class="task-info-title-close-button" onclick='this.parentNode.parentNode.parentNode.classList.toggle("show-info")'></span>
+            </div>
+            <div class="task-info-content">
+                <table><tbody>
+                    <tr><td class="param-name">КЭС:</td><td class="param-row"><div>2.13 Графы. Основные понятия. Виды графов. Описание графов с помощью матриц смежности, весовых матриц, списков смежности. Решение алгоритмических задач, связанных с анализом графов (построение оптимального пути между вершинами графа, определение количества различных путей между вершинами ориентированного ациклического графа)</div><div>2.14 Деревья. Бинарное дерево. Деревья поиска. Способы обхода дерева. Представление арифметических выражений в виде дерева. Использование графов и деревьев при описании объектов и процессов окружающего мира</div><div>3.2 Оценка сложности вычислений. Время работы и объём используемой памяти, их зависимость от размера исходных данных. Оценка асимптотической сложности алгоритмов. Алгоритмы полиномиальной сложности. Переборные алгоритмы. Примеры различных алгоритмов решения одной задачи, которые имеют различную сложность</div><div>3.3 Определение возможных результатов работы простейших алгоритмов управления исполнителями и вычислительных алгоритмов. Определение исходных данных, при которых алгоритм может дать требуемый результат</div><div>3.10 Массивы и последовательности чисел. Вычисление обобщённых характеристик элементов массива или числовой последовательности (суммы, произведения, среднего арифметического, минимального и максимального элементов, количества элементов, удовлетворяющих заданному условию). Линейный поиск заданного значения в массиве. Алгоритмы работы с элементами массива с однократным просмотром массива. Сортировка одномерного массива. Простые методы сортировки (метод пузырька, метод выбора, сортировка вставками). Сортировка слиянием. Быстрая сортировка массива (алгоритм QuickSort). Двоичный поиск в отсортированном массиве</div><div>3.11 Двумерные массивы (матрицы). Алгоритмы обработки двумерных массивов: заполнение двумерного числового массива по заданным правилам, поиск элемента в двумерном массиве, вычисление максимума (минимума) и суммы элементов двумерного массива, перестановка строк и столбцов двумерного массива</div><div>3.12 Словари (ассоциативные массивы, отображения). Хэш-таблицы. Построение алфавитно-частотного словаря для заданного текста</div><div>3.13 Стеки. Анализ правильности скобочного выражения. Вычисление арифметического выражения, записанного в постфиксной форме. Очереди. Использование очереди для временного хранения данных</div><div>3.14 Алгоритмы на графах. Построение минимального остовного дерева взвешенного связного неориентированного графа. Количество различных путей между вершинами ориентированного ациклического графа. Алгоритм Дейкстры</div><div>3.15 Деревья. Реализация дерева с помощью ссылочных структур. Двоичные (бинарные) деревья. Построение дерева для заданного арифметического выражения. Рекурсивные алгоритмы обхода дерева. Использование стека и очереди для обхода дерева</div></td></tr>                                                                                <tr><td class="param-name">Тип ответа:</td><td>Краткий ответ</td></tr>                                      </tbody></table>
+            </div>
+        </div>
+        <div class="id-text">Номер: <span class="canselect">18D81B</span></div>
+        <div class="favorite-button" title="Добавить в Избранное" onclick="changeFavour(this,'5547FF69A87EAA15450A2116DC08B5EE')"></div>
+                         <div class="number-in-group" title="Задание 3 в D92183 ">
+            <span class="number-in-group-img"></span><span class="number-in-group-text">3 (D92183)</span>
+        </div>
+        <div class="answer-panel">
+             <span class="status-title-text hidden-xs">Статус задания:</span>
+             <span class="task-status task-status-0">НЕ РЕШЕНО</span>
+             <span class="answer-button" onclick="checkButtonClick('checkform18D81B', setAnswer18D81B, this.parentNode)">Ответить</span>
+        </div>
+
+    </div>
+</div>	    <script type='text/javascript'>
+	        if (favQst.has("5547FF69A87EAA15450A2116DC08B5EE"))
+	            toggleQFavour('i18D81B');
+	        if (solvedQst.has("5547FF69A87EAA15450A2116DC08B5EE"))
+	            setQSolved('i18D81B', '1');
+	    </script>
+	    
+<div id='bottom_marker'></div>
+
+<script type='text/javascript'>
+function setSize() {  if (window.parent) {
+    window.parent.setQCount(2313);
+    //var rect = document.body.getBoundingClientRect();
+    //window.parent.setContainerSize(rect.bottom - rect.top);
+    //window.parent.setContainerSize(Math.max(
+    //      document.body.offsetHeight, document.documentElement.offsetHeight,
+    //      document.body.clientHeight, document.documentElement.clientHeight)
+    //);
+    resizeContainer();
+  }
+}
+
+var cWidth = document.body.offsetWidth;
+
+function resizeContainer(){
+    var rect = document.getElementById('bottom_marker').getBoundingClientRect(); //document.body.lastChild.getBoundingClientRect();
+    window.parent.setContainerSize(rect.bottom);}
+
+function windowResize() {
+    if (cWidth != document.body.offsetWidth) {    	cWidth = document.body.offsetWidth;
+    	resizeContainer();
+    }}
+
+if (window.parent) {
+    window.parent.setQCount(2313, 24, 100);
+    
+    if (MathJax) {
+        MathJax.Hub.Register.StartupHook("End",function () { setSize(); setTimeout(resizeContainer, 1000) });
+    }
+
+	if (window.addEventListener)
+        window.addEventListener('resize', windowResize);
+    else if (window.attachEvent)
+        window.attachEvent('onresize', windowResize);
+}
+
+</script>
+<script type="text/x-mathjax-config">MathJax.Hub.Config({messageStyle: "none", "HTML-CSS": { matchFontHeight: true }, MMLorHTML: { prefer: { MSIE: "MML" } } });</script><SCRIPT language=JavaScript src="../../lib/bdetect.js" type=text/javascript></SCRIPT>
+
+<script language='JavaScript'>
+var crtm="1763986460";
+function SubmitForm(aform,pgname)
+{
+var aEl = document.createElement('input');
+if (!browser.isMac || !browser.isIE)
+  aEl.type = 'hidden';
+aEl.style.display = 'none';
+aEl.name = 'crtm';
+aEl.value = crtm;
+aform.appendChild(aEl);
+aform.action=pgname;
+aform.submit();
+
+}
+function GetPageName(pgname,extparams){
+if (pgname=='') pgname='/bank/questions.php';
+if (extparams=='')
+	pgname=pgname+"?crtm="+crtm;
+else	pgname=pgname+"?crtm="+crtm+"&"+extparams;
+return pgname;}
+function ShowPage(pgname,extparams,wndname,wndparam){
+if (wndname=='') {
+
+  location.href=GetPageName(pgname,extparams);
+
+  }
+  else
+ {if (wndparam=='')
+wnd=window.open(GetPageName(pgname,extparams),wndname);
+else wnd=window.open(GetPageName(pgname,extparams),wndname,wndparam);
+wnd.focus();}
+}
+</script>
+<script language='javascript'>
+                function onXS3DocumectLoad() {setSize();
+ }
+
+		if (window.addEventListener)
+            window.addEventListener('load', onXS3DocumectLoad);
+        else if (window.attachEvent)
+            window.attachEvent('onload', onXS3DocumectLoad);
+        else
+            window.onload = onXS3DocumectLoad;
+ </script><script language='javascript'>
+                function onXS3DocumectUnload(e) {
+			    	document.cookie = "md_auto=qprint; path=/; SameSite=Lax";
+			   		//return false;
+		    }
+		if (window.addEventListener)
+            window.addEventListener('beforeunload', onXS3DocumectUnload);
+        else if (window.attachEvent)
+            window.attachEvent('onbeforeunload', onXS3DocumectUnload);
+        else
+            window.onbeforeunload = onXS3DocumectUnload;
+        </script></body>
+</html>
