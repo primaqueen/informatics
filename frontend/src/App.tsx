@@ -24,14 +24,23 @@ import {
   Checkbox,
   ListItemIcon,
   Chip,
+  MenuItem,
 } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
 import React, { useMemo, useState } from "react";
+import type { SelectChangeEvent } from "@mui/material/Select";
 import { useTasks } from "./hooks/useTasks";
 import { TaskCard } from "./components/TaskCard";
 import kesReference from "./reference/kes.json";
+
+const DevTaskEditorDialog = import.meta.env.DEV
+  ? React.lazy(async () => {
+      const mod = await import("./components/TaskEditorDialog");
+      return { default: mod.TaskEditorDialog };
+    })
+  : null;
 
 interface KesItem {
   raw: string;
@@ -49,13 +58,17 @@ const theme = createTheme({
 });
 
 const PAGE_SIZE = 10;
+const TASK_NUMBER_ALL_VALUE = "all";
+const TASK_NUMBER_UNASSIGNED_VALUE = "no-number";
 
 function App() {
-  const { tasks, loading, error } = useTasks();
+  const { tasks, loading, error, applyOverride } = useTasks();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState("");
+  const [taskNumberFilter, setTaskNumberFilter] = useState<string>(TASK_NUMBER_ALL_VALUE);
   const [selectedKes, setSelectedKes] = useState<string[]>([]);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
 
   const kesCatalog = useMemo(() => {
     const byId = new Map<string, { text: string; section: string }>();
@@ -69,6 +82,29 @@ function App() {
     );
     return byId;
   }, []);
+
+  const taskNumberOptions = useMemo(
+    () =>
+      Array.from(
+        tasks.reduce((acc, task) => {
+          const key = task.task_number ?? null;
+          acc.set(key, (acc.get(key) ?? 0) + 1);
+          return acc;
+        }, new Map<number | null, number>()),
+      )
+        .map(([numberValue, count]) => ({
+          value: numberValue === null ? TASK_NUMBER_UNASSIGNED_VALUE : String(numberValue),
+          numberValue,
+          display: numberValue === null ? "Без номера" : `№ ${numberValue}`,
+          count,
+        }))
+        .sort((a, b) => {
+          if (a.numberValue === null) return -1;
+          if (b.numberValue === null) return 1;
+          return (a.numberValue ?? 0) - (b.numberValue ?? 0);
+        }),
+    [tasks],
+  );
 
   const kesItems = useMemo<KesItem[]>(() => {
     const counts = new Map<string, number>();
@@ -87,12 +123,6 @@ function App() {
       return { raw, code, title, section, count };
     });
   }, [tasks, kesCatalog]);
-
-  const kesLookup = useMemo(() => {
-    const map = new Map<string, KesItem>();
-    kesItems.forEach((item) => map.set(item.code, item));
-    return map;
-  }, [kesItems]);
 
   const kesSections = useMemo(
     () =>
@@ -117,8 +147,7 @@ function App() {
     const query = search.trim().toLowerCase();
     return tasks.filter((task) => {
       const ids = [task.internal_id, task.meta?.internal_id, task.qid, task.suffix];
-      const matchesSearch =
-        !query || ids.some((value) => value?.toLowerCase().includes(query));
+      const matchesSearch = !query || ids.some((value) => value?.toLowerCase().includes(query));
 
       const kesCodes = task.meta?.["КЭС"]?.map((value) => value.split(" ")[0]) ?? [];
       const matchesKes =
@@ -127,9 +156,15 @@ function App() {
           selectedKes.some((sel) => code === sel || code.startsWith(`${sel}.`)),
         );
 
-      return matchesSearch && matchesKes;
+      const matchesTaskNumber =
+        taskNumberFilter === TASK_NUMBER_ALL_VALUE ||
+        (taskNumberFilter === TASK_NUMBER_UNASSIGNED_VALUE
+          ? task.task_number == null
+          : String(task.task_number) === taskNumberFilter);
+
+      return matchesSearch && matchesKes && matchesTaskNumber;
     });
-  }, [search, tasks, selectedKes]);
+  }, [search, tasks, selectedKes, taskNumberFilter]);
 
   const pageCount = useMemo(
     () => Math.max(1, Math.ceil(filteredTasks.length / PAGE_SIZE)),
@@ -141,6 +176,11 @@ function App() {
     return filteredTasks.slice(start, start + PAGE_SIZE);
   }, [page, filteredTasks]);
 
+  const editingTask = useMemo(
+    () => (editingTaskId ? tasks.find((task) => task.internal_id === editingTaskId) ?? null : null),
+    [editingTaskId, tasks],
+  );
+
   const handlePageChange = (_: React.ChangeEvent<unknown>, value: number) => {
     setPage(value);
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -151,19 +191,28 @@ function App() {
     setPage(1);
   };
 
+  const handleTaskNumberChange = (event: SelectChangeEvent<string>) => {
+    setTaskNumberFilter(event.target.value);
+    setPage(1);
+  };
+
   const openSearchPanel = () => setSearchOpen(true);
   const closeSearchPanel = () => setSearchOpen(false);
 
   const filtersSummary = useMemo(() => {
     const parts: string[] = [];
     if (search.trim()) parts.push(search.trim());
+    if (taskNumberFilter !== TASK_NUMBER_ALL_VALUE) {
+      const selectedNumber = taskNumberOptions.find((option) => option.value === taskNumberFilter);
+      if (selectedNumber) parts.push(`Номер: ${selectedNumber.display}`);
+    }
     if (selectedKes.length) {
       const visible = selectedKes.slice(0, 3).join(", ");
       const more = selectedKes.length > 3 ? ` +${selectedKes.length - 3}` : "";
       parts.push(`КЭС: ${visible}${more}`);
     }
     return parts.join(" · ") || "Поиск по internal_id / qid / suffix";
-  }, [search, selectedKes]);
+  }, [search, selectedKes, taskNumberFilter, taskNumberOptions]);
 
   const toggleKes = (code: string) => {
     setSelectedKes((prev) => {
@@ -244,6 +293,31 @@ function App() {
               }}
             />
 
+            <TextField
+              select
+              label="Номер задачи"
+              value={taskNumberFilter}
+              onChange={handleTaskNumberChange}
+              helperText="Выберите номер из списка или оставьте все задачи"
+            >
+              <MenuItem value={TASK_NUMBER_ALL_VALUE}>Все номера</MenuItem>
+              {taskNumberOptions.map((option) => (
+                <MenuItem key={option.value} value={option.value}>
+                  <Stack
+                    direction="row"
+                    spacing={1}
+                    alignItems="center"
+                    sx={{ width: "100%", justifyContent: "space-between" }}
+                  >
+                    <Typography component="span">{option.display}</Typography>
+                    <Typography component="span" variant="body2" color="text.secondary">
+                      Задач: {option.count}
+                    </Typography>
+                  </Stack>
+                </MenuItem>
+              ))}
+            </TextField>
+
             <Stack direction="row" spacing={1} alignItems="center">
               <Typography variant="subtitle1" sx={{ flexGrow: 1 }}>
                 Фильтр по КЭС
@@ -314,7 +388,11 @@ function App() {
           </Stack>
         </DialogContent>
         <DialogActions>
-          <Stack direction="row" spacing={1} sx={{ px: 1, width: "100%", justifyContent: "flex-end" }}>
+          <Stack
+            direction="row"
+            spacing={1}
+            sx={{ px: 1, width: "100%", justifyContent: "flex-end" }}
+          >
             {selectedKes.length > 0 && (
               <Chip
                 size="small"
@@ -342,7 +420,9 @@ function App() {
         {!loading && !error && (
           <>
             {pageTasks.length ? (
-              pageTasks.map((task) => <TaskCard key={task.qid} task={task} />)
+              pageTasks.map((task) => (
+                <TaskCard key={task.qid} task={task} onEdit={() => setEditingTaskId(task.internal_id)} />
+              ))
             ) : (
               <Typography sx={{ my: 2 }}>Ничего не найдено.</Typography>
             )}
@@ -361,6 +441,17 @@ function App() {
           </>
         )}
       </Container>
+
+      {import.meta.env.DEV && DevTaskEditorDialog ? (
+        <React.Suspense fallback={null}>
+          <DevTaskEditorDialog
+            open={Boolean(editingTask)}
+            task={editingTask}
+            onClose={() => setEditingTaskId(null)}
+            onSaved={(internalId, override) => applyOverride(internalId, override)}
+          />
+        </React.Suspense>
+      ) : null}
     </ThemeProvider>
   );
 }
