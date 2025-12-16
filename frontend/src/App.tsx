@@ -29,10 +29,13 @@ import {
 import RefreshIcon from "@mui/icons-material/Refresh";
 import SearchIcon from "@mui/icons-material/Search";
 import CloseIcon from "@mui/icons-material/Close";
-import React, { useMemo, useState } from "react";
+import ClearIcon from "@mui/icons-material/Clear";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import React, { useEffect, useMemo, useState } from "react";
 import type { SelectChangeEvent } from "@mui/material/Select";
 import { useTasks } from "./hooks/useTasks";
 import { TaskCard } from "./components/TaskCard";
+import { KesDetailsOverlay } from "./components/KesDetailsOverlay";
 import kesReference from "./reference/kes.json";
 
 const DevTaskEditorDialog = import.meta.env.DEV
@@ -60,15 +63,65 @@ const theme = createTheme({
 const PAGE_SIZE = 10;
 const TASK_NUMBER_ALL_VALUE = "all";
 const TASK_NUMBER_UNASSIGNED_VALUE = "no-number";
+const QUERY_PARAM_SEARCH = "q";
+const QUERY_PARAM_TASK_NUMBER = "num";
 
 function App() {
   const { tasks, loading, error, applyOverride } = useTasks();
   const [page, setPage] = useState(1);
-  const [search, setSearch] = useState("");
-  const [taskNumberFilter, setTaskNumberFilter] = useState<string>(TASK_NUMBER_ALL_VALUE);
+  const [search, setSearch] = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get(QUERY_PARAM_SEARCH) ?? "";
+  });
+  const [taskNumberFilter, setTaskNumberFilter] = useState<string>(() => {
+    const params = new URLSearchParams(window.location.search);
+    const raw = params.get(QUERY_PARAM_TASK_NUMBER);
+    if (raw === TASK_NUMBER_UNASSIGNED_VALUE) return TASK_NUMBER_UNASSIGNED_VALUE;
+    if (raw && /^\d+$/.test(raw)) return raw;
+    return TASK_NUMBER_ALL_VALUE;
+  });
   const [selectedKes, setSelectedKes] = useState<string[]>([]);
   const [searchOpen, setSearchOpen] = useState(false);
   const [editingTaskId, setEditingTaskId] = useState<string | null>(null);
+  const [kesDetails, setKesDetails] = useState<{
+    item: KesItem;
+    anchorEl: HTMLElement | null;
+  } | null>(null);
+
+  const hasActiveFilters = useMemo(
+    () =>
+      Boolean(search.trim()) ||
+      taskNumberFilter !== TASK_NUMBER_ALL_VALUE ||
+      selectedKes.length > 0,
+    [search, selectedKes.length, taskNumberFilter],
+  );
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const normalizedSearch = search.trim();
+
+    if (normalizedSearch) {
+      params.set(QUERY_PARAM_SEARCH, normalizedSearch);
+    } else {
+      params.delete(QUERY_PARAM_SEARCH);
+    }
+
+    if (taskNumberFilter === TASK_NUMBER_ALL_VALUE) {
+      params.delete(QUERY_PARAM_TASK_NUMBER);
+    } else {
+      params.set(QUERY_PARAM_TASK_NUMBER, taskNumberFilter);
+    }
+
+    const nextQuery = params.toString();
+    const nextUrl = `${window.location.pathname}${nextQuery ? `?${nextQuery}` : ""}${
+      window.location.hash
+    }`;
+    const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+
+    if (nextUrl !== currentUrl) {
+      window.history.replaceState(null, "", nextUrl);
+    }
+  }, [search, taskNumberFilter]);
 
   const kesCatalog = useMemo(() => {
     const byId = new Map<string, { text: string; section: string }>();
@@ -123,6 +176,8 @@ function App() {
       return { raw, code, title, section, count };
     });
   }, [tasks, kesCatalog]);
+
+  const kesItemsByRaw = useMemo(() => new Map(kesItems.map((item) => [item.raw, item])), [kesItems]);
 
   const kesSections = useMemo(
     () =>
@@ -191,6 +246,15 @@ function App() {
     setPage(1);
   };
 
+  const clearAllFilters = (event?: React.MouseEvent) => {
+    event?.stopPropagation();
+    event?.preventDefault();
+    setSearch("");
+    setTaskNumberFilter(TASK_NUMBER_ALL_VALUE);
+    setSelectedKes([]);
+    setPage(1);
+  };
+
   const handleTaskNumberChange = (event: SelectChangeEvent<string>) => {
     setTaskNumberFilter(event.target.value);
     setPage(1);
@@ -198,6 +262,7 @@ function App() {
 
   const openSearchPanel = () => setSearchOpen(true);
   const closeSearchPanel = () => setSearchOpen(false);
+  const closeKesDetails = () => setKesDetails(null);
 
   const filtersSummary = useMemo(() => {
     const parts: string[] = [];
@@ -228,6 +293,25 @@ function App() {
     setPage(1);
   };
 
+  const openKesDetails = (item: KesItem, anchorEl: HTMLElement | null) => {
+    setKesDetails({ item, anchorEl });
+  };
+
+  const handleKesClick = (raw: string, anchorEl: HTMLElement) => {
+    const found = kesItemsByRaw.get(raw);
+    if (found) {
+      openKesDetails(found, anchorEl);
+      return;
+    }
+
+    const [code, ...rest] = raw.split(" ");
+    const ref = kesCatalog.get(code);
+    const titleFromRef = ref?.text?.replace(new RegExp(`^${code}\\s*`), "").trim();
+    const title = titleFromRef || rest.join(" ").trim();
+    const section = ref?.section || code.split(".")[0] || code;
+    openKesDetails({ raw, code, title, section, count: 0 }, anchorEl);
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -250,6 +334,18 @@ function App() {
                     <SearchIcon fontSize="small" />
                   </InputAdornment>
                 ),
+                endAdornment: hasActiveFilters ? (
+                  <InputAdornment position="end">
+                    <IconButton
+                      size="small"
+                      aria-label="Сбросить фильтры"
+                      onClick={clearAllFilters}
+                      onMouseDown={(event) => event.stopPropagation()}
+                    >
+                      <ClearIcon fontSize="small" />
+                    </IconButton>
+                  </InputAdornment>
+                ) : null,
               }}
             />
           </Box>
@@ -290,6 +386,13 @@ function App() {
                     <SearchIcon fontSize="small" />
                   </InputAdornment>
                 ),
+                endAdornment: hasActiveFilters ? (
+                  <InputAdornment position="end">
+                    <IconButton size="small" aria-label="Сбросить фильтры" onClick={clearAllFilters}>
+                      <ClearIcon fontSize="small" />
+                    </IconButton>
+                  </InputAdornment>
+                ) : null,
               }}
             />
 
@@ -360,30 +463,40 @@ function App() {
                         secondary={`Всего задач: ${section.count}`}
                       />
                     </ListItemButton>
-                    {section.items.map((item) => (
-                      <ListItemButton
-                        key={item.code}
-                        selected={selectedKes.includes(item.code)}
-                        onClick={() => toggleKes(item.code)}
-                        sx={{ borderRadius: 1, mb: 0.5 }}
-                      >
-                        <ListItemIcon sx={{ minWidth: 36 }}>
-                          <Checkbox
-                            edge="start"
-                            tabIndex={-1}
-                            disableRipple
-                            checked={selectedKes.includes(item.code)}
-                          />
-                        </ListItemIcon>
-                        <ListItemText
-                          primary={`${item.code} — ${item.title || "Без названия"}`}
-                          secondary={`Задач: ${item.count}`}
-                        />
-                      </ListItemButton>
-                    ))}
-                  </List>
-                </Box>
-              ))}
+	                    {section.items.map((item) => (
+	                      <ListItemButton
+	                        key={item.code}
+	                        selected={selectedKes.includes(item.code)}
+	                        onClick={() => toggleKes(item.code)}
+	                        sx={{ borderRadius: 1, mb: 0.5 }}
+	                      >
+	                        <ListItemIcon sx={{ minWidth: 36 }}>
+	                          <Checkbox
+	                            edge="start"
+	                            tabIndex={-1}
+	                            disableRipple
+	                            checked={selectedKes.includes(item.code)}
+	                          />
+	                        </ListItemIcon>
+	                        <ListItemText
+	                          primary={item.code}
+	                          secondary={`Задач: ${item.count}`}
+	                        />
+	                        <IconButton
+	                          size="small"
+	                          aria-label={`Детали КЭС ${item.code}`}
+	                          onClick={(event) => {
+	                            event.stopPropagation();
+	                            openKesDetails(item, event.currentTarget);
+	                          }}
+	                        >
+	                          <InfoOutlinedIcon fontSize="small" />
+	                        </IconButton>
+	                      </ListItemButton>
+	                    ))}
+	                  </List>
+	                </Box>
+	              ))}
             </Box>
           </Stack>
         </DialogContent>
@@ -421,7 +534,12 @@ function App() {
           <>
             {pageTasks.length ? (
               pageTasks.map((task) => (
-                <TaskCard key={task.qid} task={task} onEdit={() => setEditingTaskId(task.internal_id)} />
+                <TaskCard
+                  key={task.qid}
+                  task={task}
+                  onEdit={() => setEditingTaskId(task.internal_id)}
+                  onKesClick={handleKesClick}
+                />
               ))
             ) : (
               <Typography sx={{ my: 2 }}>Ничего не найдено.</Typography>
@@ -452,6 +570,14 @@ function App() {
           />
         </React.Suspense>
       ) : null}
+
+      <KesDetailsOverlay
+        item={kesDetails?.item ?? null}
+        anchorEl={kesDetails?.anchorEl ?? null}
+        onClose={closeKesDetails}
+        onToggleFilter={toggleKes}
+        isCodeSelected={kesDetails ? selectedKes.includes(kesDetails.item.code) : false}
+      />
     </ThemeProvider>
   );
 }

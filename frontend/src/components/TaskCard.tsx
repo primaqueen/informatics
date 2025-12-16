@@ -16,9 +16,10 @@ import { MarkdownRenderer } from "./MarkdownRenderer";
 interface Props {
   task: Task;
   onEdit?: (task: Task) => void;
+  onKesClick?: (raw: string, anchorEl: HTMLElement) => void;
 }
 
-export function TaskCard({ task, onEdit }: Props) {
+export function TaskCard({ task, onEdit, onKesClick }: Props) {
   const question = task.question_override_md ?? task.question_html_clean;
   return (
     <Card variant="outlined" sx={{ mb: 2 }}>
@@ -79,9 +80,21 @@ export function TaskCard({ task, onEdit }: Props) {
           <Box sx={{ mt: 1 }}>
             <Divider sx={{ my: 1 }} />
             <Stack direction="row" spacing={1} flexWrap="wrap" rowGap={1}>
-              {task.meta["КЭС"].map((item) => (
-                <Chip key={item} size="small" label={item} variant="outlined" />
-              ))}
+              {task.meta["КЭС"].map((raw) => {
+                const code = raw.split(" ")[0] || raw;
+                return (
+                  <Chip
+                    key={raw}
+                    size="small"
+                    label={code}
+                    variant="outlined"
+                    clickable={Boolean(onKesClick)}
+                    onClick={
+                      onKesClick ? (event) => onKesClick(raw, event.currentTarget as HTMLElement) : undefined
+                    }
+                  />
+                );
+              })}
             </Stack>
           </Box>
         ) : null}

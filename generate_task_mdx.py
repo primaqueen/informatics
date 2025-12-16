@@ -12,6 +12,7 @@
 
 Запуск:
     uv run python generate_task_mdx.py --internal-id 09DBe5
+    uv run python generate_task_mdx.py --task-number 5 --overwrite
 """
 
 from __future__ import annotations
@@ -34,13 +35,27 @@ MATH_EQ_NUM_RE = re.compile(r"\$(?P<a>[^$\n]+?)\$\s*=\s*(?P<b>\b\d+\b)")
 SINGLE_LEADING_SPACE_RE = re.compile(r"(?m)^ (?![ \t])")
 LETTER_ITEM_RE = re.compile(r"^(?P<label>[A-Za-zА-Яа-яЁё])\)\s*(?P<rest>.+)$")
 ORDERED_ITEM_RE = re.compile(r"^(?P<indent>[ \t]*)(?:\d+[.)])\s+")
+ORDERED_MARKER_NORMALIZE_RE = re.compile(
+    r"^(?P<indent>[ \t]*)(?P<num>\d+)[.)][ \t]+(?P<rest>.*)$",
+)
+COMMA_SOFTBREAK_RE = re.compile(r",[ \t]*\r?\n(?=[a-zа-яё])")
 TASK5_ITALIC_VARS = {"N", "R"}
 TASK5_NUMBER_TOKEN_RE = re.compile(r"(?<![0-9A-Za-zА-Яа-я_])\d+(?![0-9A-Za-zА-Яа-я_])")
+TASK5_BROKEN_ITALIC_VAR_WITH_FOLLOW_RE = re.compile(
+    r"\*(?P<var>[NR])\s+\*(?P<next>[A-Za-zА-Яа-яЁё])",
+)
+TASK5_BROKEN_ITALIC_VAR_RE = re.compile(r"\*(?P<var>[NR])\s+\*")
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--internal-id", required=True, help="internal_id задачи, например 09DBe5")
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument("--internal-id", help="internal_id задачи, например 09DBe5")
+    group.add_argument(
+        "--task-number",
+        type=int,
+        help="сгенерировать все задачи с указанным номером из internal_id_to_task_number.json",
+    )
     parser.add_argument("--input", type=Path, default=Path("tasks_clean.jsonl"))
     parser.add_argument(
         "--output-dir",
@@ -63,6 +78,38 @@ def load_task(input_path: Path, internal_id: str) -> dict[str, Any]:
             if str(row.get("internal_id", "")).lower() == target:
                 return row
     raise ValueError(f"Задача с internal_id={internal_id!r} не найдена в {input_path}")
+
+
+def load_tasks_for_internal_ids(
+    input_path: Path,
+    internal_ids: set[str],
+) -> dict[str, dict[str, Any]]:
+    """Ищет несколько задач за один проход по jsonl.
+
+    Возвращает mapping INTERNAL_ID (UPPER) -> task dict.
+    """
+    targets = {i.strip().lower() for i in internal_ids if i.strip()}
+    if not targets:
+        return {}
+
+    found: dict[str, dict[str, Any]] = {}
+    with input_path.open("r", encoding="utf-8") as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            row = json.loads(line)
+            row_id = str(row.get("internal_id", "")).strip()
+            if not row_id:
+                continue
+            if row_id.lower() not in targets:
+                continue
+
+            found[row_id.upper()] = row
+            if len(found) == len(targets):
+                break
+
+    return found
 
 
 def load_task_number_map(
@@ -350,6 +397,10 @@ def _transform_outside_inline_code(text: str, task_number: int | None) -> str:
         return text
 
     text = SINGLE_LEADING_SPACE_RE.sub("", text)
+    text = normalize_comma_softbreaks(text)
+    text = normalize_ordered_list_markers(text)
+    if task_number == 5:
+        text = normalize_task5_broken_italic_vars(text)
     text = normalize_letter_subpoints(text)
 
     parts: list[str] = []
@@ -368,6 +419,70 @@ def _transform_outside_inline_code(text: str, task_number: int | None) -> str:
         tail = convert_task5_numbers_to_math(tail)
     parts.append(tail)
     return "".join(parts)
+
+
+def normalize_comma_softbreaks(markdown: str) -> str:
+    """Склеивает переносы строк после запятой внутри предложения.
+
+    В рендеринге используется `whiteSpace: pre-wrap`, поэтому `,\nа ...` визуально
+    становится переносом строки. Склеиваем только когда новая строка начинается со
+    строчной буквы (то есть это почти наверняка продолжение предложения).
+    """
+    if not markdown:
+        return markdown
+    return COMMA_SOFTBREAK_RE.sub(", ", markdown)
+
+
+def normalize_ordered_list_markers(markdown: str) -> str:
+    """Нормализует маркеры нумерованных списков.
+
+    Приводит строки вида `1)    Текст` и `1.    Текст` к каноническому `1. Текст`.
+    Это стабилизирует отступы подпунктов (`а)`/`б)`), которые зависят от длины маркера.
+    """
+    if not markdown:
+        return markdown
+
+    lines = markdown.splitlines(keepends=True)
+    out: list[str] = []
+
+    for line in lines:
+        content = line.rstrip("\r\n")
+        newline = line[len(content) :]
+
+        match = ORDERED_MARKER_NORMALIZE_RE.match(content)
+        if not match:
+            out.append(line)
+            continue
+
+        indent = match.group("indent")
+        num = match.group("num")
+        rest = match.group("rest").lstrip()
+        if rest:
+            out.append(f"{indent}{num}. {rest}{newline}")
+        else:
+            out.append(f"{indent}{num}.{newline}")
+
+    return "".join(out)
+
+
+def normalize_task5_broken_italic_vars(markdown: str) -> str:
+    """Чинит артефакт конвертации вида `*N *нечётное` -> `*N* нечётное`.
+
+    Делаем это только для N/R и только для задач №5, чтобы минимизировать риск
+    неожиданных замен в обычном тексте.
+    """
+    if not markdown:
+        return markdown
+
+    fixed = TASK5_BROKEN_ITALIC_VAR_WITH_FOLLOW_RE.sub(
+        lambda m: f"*{m.group('var')}* {m.group('next')}",
+        markdown,
+    )
+    fixed = TASK5_BROKEN_ITALIC_VAR_RE.sub(
+        lambda m: f"*{m.group('var')}*",
+        fixed,
+    )
+    return fixed
 
 
 def normalize_letter_subpoints(markdown: str) -> str:
@@ -527,6 +642,7 @@ def normalize_math_in_markdown(markdown: str, *, task_number: int | None) -> str
 
 def to_frontmatter(task: dict[str, Any]) -> str:
     answer_type = str(task.get("answer_type") or "unknown")
+    internal_id = str(task.get("internal_id") or "").upper()
     kes_raw = (task.get("meta") or {}).get("КЭС") or []
     kes_codes: list[str] = []
     if isinstance(kes_raw, list):
@@ -539,7 +655,10 @@ def to_frontmatter(task: dict[str, Any]) -> str:
     hint = str(task.get("hint") or "")
     options = task.get("options") or []
 
-    lines: list[str] = ["---", f"answer_type: {answer_type}"]
+    if not internal_id:
+        raise ValueError("У задачи отсутствует internal_id")
+
+    lines: list[str] = ["---", f'id: "{internal_id}"', f"answer_type: {answer_type}"]
 
     if kes_codes:
         lines.append("kes:")
@@ -575,30 +694,74 @@ def to_frontmatter(task: dict[str, Any]) -> str:
     return "\n".join(lines) + "\n"
 
 
-def main() -> None:
-    args = parse_args()
-    task = load_task(args.input, args.internal_id)
-
-    internal_id = str(task.get("internal_id") or "").upper()
-    if not internal_id:
-        raise ValueError("У задачи отсутствует internal_id")
-
-    task_number = load_task_number_map().get(internal_id)
-
+def render_task_mdx(task: dict[str, Any], *, task_number: int | None) -> str:
     raw_html = str(task.get("question_html_clean") or "")
     converted_html = convert_sub_sup_to_tex(raw_html)
     body = html_to_markdown(converted_html).strip() + "\n"
     body = normalize_math_in_markdown(body, task_number=task_number)
+    return to_frontmatter(task) + "\n" + body
+
+
+def main() -> None:
+    args = parse_args()
 
     out_dir: Path = args.output_dir
     out_dir.mkdir(parents=True, exist_ok=True)
-    out_path = out_dir / f"{internal_id}.mdx"
-    if out_path.exists() and not args.overwrite:
-        raise FileExistsError(f"Файл уже существует: {out_path} (используй --overwrite)")
 
-    mdx = to_frontmatter(task) + "\n" + body
-    out_path.write_text(mdx, encoding="utf-8")
-    print(f"OK: {out_path}")
+    task_number_map = load_task_number_map()
+
+    if args.internal_id is not None:
+        task = load_task(args.input, args.internal_id)
+        internal_id = str(task.get("internal_id") or "").upper()
+        if not internal_id:
+            raise ValueError("У задачи отсутствует internal_id")
+
+        task_number = task_number_map.get(internal_id)
+        out_path = out_dir / f"{internal_id}.mdx"
+        if out_path.exists() and not args.overwrite:
+            raise FileExistsError(f"Файл уже существует: {out_path} (используй --overwrite)")
+
+        out_path.write_text(render_task_mdx(task, task_number=task_number), encoding="utf-8")
+        print(f"OK: {out_path}")
+        return
+
+    # batch mode
+    if args.task_number is None:
+        raise ValueError("Ожидался --task-number")
+    requested_number = int(args.task_number)
+    internal_ids = {k for k, v in task_number_map.items() if v == requested_number}
+    if not internal_ids:
+        raise ValueError(
+            f"В internal_id_to_task_number.json нет задач с номером {requested_number}",
+        )
+
+    tasks_by_id = load_tasks_for_internal_ids(args.input, internal_ids)
+    missing = sorted(internal_ids.difference(tasks_by_id.keys()))
+
+    written = 0
+    skipped = 0
+    for internal_id in sorted(tasks_by_id.keys()):
+        task = tasks_by_id[internal_id]
+        out_path = out_dir / f"{internal_id}.mdx"
+        if out_path.exists() and not args.overwrite:
+            skipped += 1
+            continue
+        out_path.write_text(
+            render_task_mdx(task, task_number=requested_number),
+            encoding="utf-8",
+        )
+        written += 1
+
+    if missing:
+        print(
+            f"WARN: {len(missing)} internal_id из маппинга не найдены в {args.input}: "
+            + ", ".join(missing[:20])
+            + (" ..." if len(missing) > 20 else ""),
+        )
+
+    print(
+        f"OK: written={written} skipped={skipped} task_number={requested_number} out_dir={out_dir}",
+    )
 
 
 if __name__ == "__main__":

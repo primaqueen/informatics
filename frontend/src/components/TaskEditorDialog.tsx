@@ -5,6 +5,7 @@ import {
   Box,
   Button,
   CircularProgress,
+  Divider,
   Dialog,
   DialogActions,
   DialogContent,
@@ -74,6 +75,9 @@ export function TaskEditorDialog({ open, task, onClose, onSaved }: Props) {
   const [loading, setLoading] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [sourceHtml, setSourceHtml] = useState<string | null>(null);
+  const [sourceHtmlLoading, setSourceHtmlLoading] = useState(false);
+  const [sourceHtmlError, setSourceHtmlError] = useState<string | null>(null);
 
   const [answerType, setAnswerType] = useState<AnswerType>("short_answer");
   const [kesCodes, setKesCodes] = useState<string[]>([]);
@@ -136,6 +140,37 @@ export function TaskEditorDialog({ open, task, onClose, onSaved }: Props) {
     };
   }, [open, task]);
 
+  useEffect(() => {
+    if (!open || !task) return;
+    if (!import.meta.env.DEV) return;
+
+    let cancelled = false;
+    setSourceHtml(null);
+    setSourceHtmlError(null);
+    setSourceHtmlLoading(true);
+
+    async function loadSource() {
+      try {
+        const res = await fetch(`/__admin/task-source/${task.internal_id}`);
+        if (res.status === 404) return;
+        if (!res.ok) throw new Error(`HTTP ${res.status} при загрузке источника`);
+        const data = (await res.json()) as { question_html?: unknown };
+        if (cancelled) return;
+        setSourceHtml(typeof data.question_html === "string" ? data.question_html : "");
+      } catch (e) {
+        if (cancelled) return;
+        setSourceHtmlError(e instanceof Error ? e.message : String(e));
+      } finally {
+        if (!cancelled) setSourceHtmlLoading(false);
+      }
+    }
+
+    loadSource();
+    return () => {
+      cancelled = true;
+    };
+  }, [open, task]);
+
   const preview = useMemo(
     () => ({
       answer_type: answerType,
@@ -189,7 +224,12 @@ export function TaskEditorDialog({ open, task, onClose, onSaved }: Props) {
   };
 
   return (
-    <Dialog open={open} onClose={onClose} fullWidth maxWidth="lg">
+    <Dialog
+      open={open}
+      onClose={onClose}
+      fullScreen
+      PaperProps={{ sx: { display: "flex", flexDirection: "column" } }}
+    >
       <DialogTitle>
         <Stack direction="row" spacing={1} alignItems="center">
           <Box sx={{ flexGrow: 1, minWidth: 0 }}>
@@ -212,8 +252,8 @@ export function TaskEditorDialog({ open, task, onClose, onSaved }: Props) {
             <CircularProgress />
           </Box>
         ) : (
-          <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
-            <Box sx={{ flex: 1, minWidth: 0 }}>
+          <Stack direction={{ xs: "column", md: "row" }} spacing={2} sx={{ height: "100%" }}>
+            <Box sx={{ flex: 1, minWidth: 0, overflow: "auto" }}>
               <Stack spacing={2}>
                 <TextField
                   select
@@ -319,38 +359,60 @@ export function TaskEditorDialog({ open, task, onClose, onSaved }: Props) {
               </Stack>
             </Box>
 
-            <Box sx={{ flex: 1, minWidth: 0 }}>
-              <Typography variant="subtitle2" sx={{ mb: 1 }}>
-                Превью
-              </Typography>
-              <MarkdownRenderer markdown={preview.body} />
-              {preview.hint.trim() ? (
-                <Box sx={{ mt: 1 }}>
-                  <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                    Подсказка
-                  </Typography>
-                  <MarkdownRenderer markdown={preview.hint} />
-                </Box>
-              ) : null}
-              {preview.answer_type === "single_choice" && preview.options.length ? (
-                <Box sx={{ mt: 1 }}>
-                  <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
-                    Варианты ответа
-                  </Typography>
-                  <Stack spacing={0.5}>
-                    {preview.options.map((opt) => (
-                      <Stack key={opt.value} direction="row" spacing={1} alignItems="baseline">
-                        <Typography variant="body2" sx={{ fontWeight: 700, minWidth: 20 }}>
-                          {opt.value}.
-                        </Typography>
-                        <Box sx={{ flexGrow: 1 }}>
-                          <MarkdownRenderer markdown={opt.text} inline />
-                        </Box>
-                      </Stack>
-                    ))}
-                  </Stack>
-                </Box>
-              ) : null}
+            <Box sx={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column" }}>
+              <Box sx={{ flex: 1, minWidth: 0, overflow: "auto" }}>
+                <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                  Превью (MD)
+                </Typography>
+                <MarkdownRenderer markdown={preview.body} />
+                {preview.hint.trim() ? (
+                  <Box sx={{ mt: 1 }}>
+                    <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
+                      Подсказка
+                    </Typography>
+                    <MarkdownRenderer markdown={preview.hint} />
+                  </Box>
+                ) : null}
+                {preview.answer_type === "single_choice" && preview.options.length ? (
+                  <Box sx={{ mt: 1 }}>
+                    <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
+                      Варианты ответа
+                    </Typography>
+                    <Stack spacing={0.5}>
+                      {preview.options.map((opt) => (
+                        <Stack key={opt.value} direction="row" spacing={1} alignItems="baseline">
+                          <Typography variant="body2" sx={{ fontWeight: 700, minWidth: 20 }}>
+                            {opt.value}.
+                          </Typography>
+                          <Box sx={{ flexGrow: 1 }}>
+                            <MarkdownRenderer markdown={opt.text} inline />
+                          </Box>
+                        </Stack>
+                      ))}
+                    </Stack>
+                  </Box>
+                ) : null}
+
+                <Divider sx={{ my: 2 }} />
+
+                <Typography variant="subtitle2" sx={{ mb: 1 }}>
+                  Источник (HTML)
+                </Typography>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 1 }}>
+                  question_html из tasks.jsonl
+                </Typography>
+                {sourceHtmlLoading ? (
+                  <Box sx={{ display: "flex", justifyContent: "center", py: 6 }}>
+                    <CircularProgress />
+                  </Box>
+                ) : sourceHtmlError ? (
+                  <Typography color="error">{sourceHtmlError}</Typography>
+                ) : sourceHtml !== null ? (
+                  <MarkdownRenderer markdown={sourceHtml} />
+                ) : (
+                  <Typography color="text.secondary">Источник не найден.</Typography>
+                )}
+              </Box>
             </Box>
           </Stack>
         )}

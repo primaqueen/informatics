@@ -10,6 +10,10 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const overridesDir = path.join(__dirname, "content", "tasks");
 const overridesIndexFile = path.join(__dirname, "public", "task_overrides.json");
+const tasksSourceFile = path.join(__dirname, "..", "tasks.jsonl");
+
+let sourceQuestionHtmlById: Map<string, string> | null = null;
+let sourceQuestionHtmlLoadError: string | null = null;
 
 function isValidInternalId(value: string): boolean {
   return /^[0-9a-f]{6}$/i.test(value);
@@ -61,6 +65,39 @@ function writeOverridesIndexFile(): Record<string, unknown> {
   return index;
 }
 
+function getSourceQuestionHtmlIndex(): Map<string, string> {
+  if (sourceQuestionHtmlById) return sourceQuestionHtmlById;
+  if (sourceQuestionHtmlLoadError) throw new Error(sourceQuestionHtmlLoadError);
+
+  const map = new Map<string, string>();
+  try {
+    if (!fs.existsSync(tasksSourceFile)) {
+      sourceQuestionHtmlById = map;
+      return map;
+    }
+
+    const raw = fs.readFileSync(tasksSourceFile, "utf8");
+    for (const line of raw.split(/\r?\n/)) {
+      if (!line.trim()) continue;
+      try {
+        const item = JSON.parse(line) as Record<string, unknown>;
+        const internalId = typeof item.internal_id === "string" ? item.internal_id.toUpperCase() : "";
+        if (!isValidInternalId(internalId)) continue;
+        const questionHtml = typeof item.question_html === "string" ? item.question_html : "";
+        map.set(internalId, questionHtml);
+      } catch {
+        // ignore
+      }
+    }
+
+    sourceQuestionHtmlById = map;
+    return map;
+  } catch (e) {
+    sourceQuestionHtmlLoadError = e instanceof Error ? e.message : String(e);
+    throw new Error(sourceQuestionHtmlLoadError);
+  }
+}
+
 export default defineConfig({
   plugins: [
     react(),
@@ -71,6 +108,44 @@ export default defineConfig({
         server.middlewares.use(async (req, res, next) => {
           if (!req.url) return next();
           const url = new URL(req.url, "http://localhost");
+          if (url.pathname.startsWith("/__admin/task-source/")) {
+            const rawId = decodeURIComponent(url.pathname.replace("/__admin/task-source/", "")).trim();
+            const internalId = rawId.toUpperCase();
+            if (!isValidInternalId(internalId)) {
+              res.statusCode = 400;
+              res.setHeader("Content-Type", "application/json; charset=utf-8");
+              res.end(JSON.stringify({ error: "Некорректный internal_id" }));
+              return;
+            }
+
+            if (req.method !== "GET") {
+              res.statusCode = 405;
+              res.setHeader("Content-Type", "application/json; charset=utf-8");
+              res.end(JSON.stringify({ error: "Метод не поддерживается" }));
+              return;
+            }
+
+            try {
+              const index = getSourceQuestionHtmlIndex();
+              if (!index.has(internalId)) {
+                res.statusCode = 404;
+                res.setHeader("Content-Type", "application/json; charset=utf-8");
+                res.end(JSON.stringify({ exists: false }));
+                return;
+              }
+
+              res.statusCode = 200;
+              res.setHeader("Content-Type", "application/json; charset=utf-8");
+              res.end(JSON.stringify({ exists: true, question_html: index.get(internalId) ?? "" }));
+              return;
+            } catch (e) {
+              res.statusCode = 500;
+              res.setHeader("Content-Type", "application/json; charset=utf-8");
+              res.end(JSON.stringify({ error: e instanceof Error ? e.message : String(e) }));
+              return;
+            }
+          }
+
           if (!url.pathname.startsWith("/__admin/task/")) return next();
 
           const rawId = decodeURIComponent(url.pathname.replace("/__admin/task/", "")).trim();

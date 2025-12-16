@@ -1,2 +1,17 @@
 frontend/node_modules
 assets
+.env
+.env.*
+*.tfstate
+*.tfstate.*
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraform/
+.terraform.lock.hcl
+*.tfvars
+*.tfvars.json
+*.auto.tfvars
+*.auto.tfvars.json
