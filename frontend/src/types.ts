@@ -22,6 +22,7 @@ export interface Task {
   question_text: string;
   question_html_clean: string;
   question_md: string;
+  requires_attachments?: boolean;
   question_override_md?: string;
   has_override?: boolean;
   images: Array<{ src: string; alt: string }>;

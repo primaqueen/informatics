@@ -9,9 +9,13 @@
 * в остальных MathML удаляет префикс `m:` у тегов (оставляя структуру для MathJax/KaTeX);
 * заменяет `ShowPictureQ('file')` на `<img src="assets/file" alt="">` и удаляет сам скрипт;
 * убирает служебные пустые якоря, пустые параграфы/обёртки и внешний `<td>`-контейнер;
+* убирает баннер «Задание выполняется с использованием прилагаемых файлов.»
+  и ставит флаг `requires_attachments`;
+* извлекает справочник КЭС в `reference/kes.json` и в задачах оставляет только коды КЭС;
 * пишет очищенный HTML в поле `question_html_clean`, исходный `question_html` не трогает;
 * генерирует Markdown-версию в поле `question_md`;
-* все остальные поля (включая `question_text`) копируются как есть.
+* все остальные поля копируются как есть (но из `question_text` вычищается баннер
+  про прилагаемые файлы, если он был).
 """
 
 from __future__ import annotations
@@ -69,11 +73,26 @@ EMPTY_REMOVABLE_TAGS = {
 
 UNWRAP_TAGS = {"span", "font", "o:p"}
 
+ATTACHMENTS_NOTICE_RE = re.compile(
+    r"Задание\s+выполняется\s+с\s+использованием\s+прилагаемых(?:\s+к\s+заданию)?\s+файлов\s*\.",
+    re.IGNORECASE,
+)
+
+KES_CODE_RE = re.compile(r"^\s*(?P<code>\d+(?:\.\d+)*)\b")
+
+ATTACHMENT_LINK_EXTENSIONS = (".zip", ".rar", ".7z")
+
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", type=Path, default=Path("tasks.jsonl"))
     parser.add_argument("--output", type=Path, default=Path("tasks_clean.jsonl"))
+    parser.add_argument(
+        "--kes-output",
+        type=Path,
+        default=Path("reference/kes.json"),
+        help="Куда записать справочник КЭС (id/text/section)",
+    )
     return parser.parse_args()
 
 
@@ -106,7 +125,106 @@ def single_leaf_text(math_tag: Tag) -> str | None:
     return None
 
 
-def clean_html(raw_html: str, stats: Counter[str]) -> str:
+def _strip_attachments_notice(root: Tag, stats: Counter[str]) -> bool:
+    """Удаляет строку-баннер про прилагаемые файлы (вместе с её табличной обвязкой).
+
+    На FIPI это всегда отдельный `<tr>` с текстом-баннером и без другого содержимого.
+    Текст иногда разорван переводами строк, поэтому используем regex с `\\s+`.
+    """
+
+    removed = 0
+    for tr in list(root.find_all("tr")):
+        text = tr.get_text(" ", strip=True)
+        if not ATTACHMENTS_NOTICE_RE.search(text):
+            continue
+        rest = ATTACHMENTS_NOTICE_RE.sub("", text)
+        rest = re.sub(r"\s+", " ", rest).strip()
+        if rest:
+            continue
+        tr.decompose()
+        removed += 1
+
+    if removed:
+        stats["attachments_notice_removed"] += removed
+        return True
+    return False
+
+
+def _strip_attachment_link_rows(root: Tag, stats: Counter[str]) -> int:
+    """Удаляет строки таблиц, которые содержат только ссылки на файлы (zip/rar) и иконки.
+
+    Обычно это нижний `<tr>` вида:
+      `<tr><td><a href="assets/X.zip">X.zip</a><img ...></td></tr>`
+    Сами файлы остаются в поле `attachments`, UI/потребитель должен показывать их отдельно.
+    """
+
+    removed = 0
+    for tr in list(root.find_all("tr")):
+        a_tags = tr.find_all("a", href=True)
+        if not a_tags:
+            continue
+
+        attachment_links: list[Tag] = []
+        for a_tag in a_tags:
+            href = str(a_tag.get("href", "")).strip()
+            href_lower = href.lower()
+            if href_lower.startswith("assets/") and href_lower.endswith(ATTACHMENT_LINK_EXTENSIONS):
+                attachment_links.append(a_tag)
+
+        if not attachment_links:
+            continue
+        if len(attachment_links) != len(a_tags):
+            continue
+
+        text = tr.get_text(" ", strip=True)
+        for a_tag in attachment_links:
+            link_text = a_tag.get_text(" ", strip=True)
+            if link_text:
+                text = text.replace(link_text, "")
+        text = re.sub(r"\s+", " ", text).strip()
+        if text:
+            continue
+
+        tr.decompose()
+        removed += 1
+
+    if removed:
+        stats["attachment_link_rows_removed"] += removed
+    return removed
+
+
+def _remove_empty_tables(root: Tag, stats: Counter[str]) -> None:
+    removed = 0
+    for table in list(root.find_all("table")):
+        if table.get_text(" ", strip=True):
+            continue
+        if table.find("img") or table.find("a", href=True) or table.find("math"):
+            continue
+        table.decompose()
+        removed += 1
+
+    if removed:
+        stats["empty_table_removed"] += removed
+
+
+def extract_kes_code(value: str) -> str | None:
+    match = KES_CODE_RE.match(value)
+    if not match:
+        return None
+    return match.group("code")
+
+
+def code_sort_key(value: str) -> tuple[int, ...]:
+    parts: list[int] = []
+    for part in value.split("."):
+        try:
+            parts.append(int(part))
+        except ValueError:
+            parts.append(0)
+    return tuple(parts)
+
+
+def clean_html(raw_html: str, stats: Counter[str]) -> tuple[str, bool]:
     html = strip_import_pis(raw_html)
     soup = BeautifulSoup(f"<root>{html}</root>", "html.parser")
     root = soup.find("root") or soup
@@ -174,6 +292,9 @@ def clean_html(raw_html: str, stats: Counter[str]) -> str:
         a_tag.unwrap()
         stats["anchor_unwrapped"] += 1
 
+    attachments_notice_removed = _strip_attachments_notice(root, stats)
+    _strip_attachment_link_rows(root, stats)
+
     # Удаляем пустые параграфы/обёртки, которые остаются после чистки
     for tag in list(root.find_all(EMPTY_REMOVABLE_TAGS)):
         if tag.find(True):
@@ -182,6 +303,8 @@ def clean_html(raw_html: str, stats: Counter[str]) -> str:
             continue
         tag.decompose()
         stats["empty_tag_removed"] += 1
+
+    _remove_empty_tables(root, stats)
 
     # Если верхний уровень — единственный служебный контейнер td/tr/tbody, разворачиваем его
     def unwrap_single_wrapper(node: Tag) -> bool:
@@ -200,7 +323,7 @@ def clean_html(raw_html: str, stats: Counter[str]) -> str:
         stats["wrapper_unwrapped"] += 1
 
     cleaned = "".join(str(child) for child in root.contents)
-    return cleaned
+    return cleaned, attachments_notice_removed
 
 
 def render_children(tag: Tag, indent: str = "") -> str:
@@ -291,18 +414,81 @@ def html_to_markdown(cleaned_html: str) -> str:
 def main() -> None:
     args = parse_args()
     stats: Counter[str] = Counter()
+    kes_text_by_code: dict[str, str] = {}
 
     with args.input.open() as fin, args.output.open("w") as fout:
         for line in fin:
             row = json.loads(line)
+
+            meta = row.get("meta")
+            if isinstance(meta, dict):
+                raw_kes = meta.get("КЭС")
+                if isinstance(raw_kes, list):
+                    codes: list[str] = []
+                    seen: set[str] = set()
+                    for item in raw_kes:
+                        if not isinstance(item, str):
+                            continue
+                        item = item.strip()
+                        if not item:
+                            continue
+                        code = extract_kes_code(item)
+                        if not code:
+                            stats["kes_invalid_items"] += 1
+                            continue
+
+                        existing = kes_text_by_code.get(code)
+                        if existing is None:
+                            kes_text_by_code[code] = item
+                        elif existing != item:
+                            # На практике тексты должны совпадать.
+                            # Если нет — выбираем более информативный.
+                            if len(item) > len(existing):
+                                kes_text_by_code[code] = item
+                            stats["kes_conflicts"] += 1
+
+                        if code not in seen:
+                            seen.add(code)
+                            codes.append(code)
+                    meta["КЭС"] = codes
+
             raw_html = row.get("question_html", "")
-            cleaned_html = clean_html(raw_html, stats)
+            cleaned_html, banner_removed = clean_html(raw_html, stats)
             row["question_html_clean"] = cleaned_html
             row["question_md"] = html_to_markdown(cleaned_html)
+            has_attachments = bool(row.get("attachments"))
+            notice_in_text = bool(
+                ATTACHMENTS_NOTICE_RE.search(str(row.get("question_text", "")))
+            )
+            row["requires_attachments"] = has_attachments or banner_removed or notice_in_text
+            if banner_removed or notice_in_text:
+                question_text = str(row.get("question_text", ""))
+                question_text = ATTACHMENTS_NOTICE_RE.sub("", question_text)
+                question_text = re.sub(r"\s+", " ", question_text).strip()
+                row["question_text"] = question_text
             # В clean-версии не храним сырое question_html
             row.pop("question_html", None)
             fout.write(json.dumps(row, ensure_ascii=False) + "\n")
             stats["rows"] += 1
+
+    kes_items = [
+        {"id": code, "text": text, "section": int(code.split(".")[0])}
+        for code, text in kes_text_by_code.items()
+    ]
+    kes_items.sort(key=lambda item: code_sort_key(item["id"]))
+    args.kes_output.parent.mkdir(parents=True, exist_ok=True)
+    args.kes_output.write_text(
+        json.dumps(kes_items, ensure_ascii=False, indent=2) + "\n",
+        encoding="utf-8",
+    )
+    frontend_kes_path = Path("frontend/src/reference/kes.json")
+    if frontend_kes_path.resolve() != args.kes_output.resolve():
+        frontend_kes_path.parent.mkdir(parents=True, exist_ok=True)
+        frontend_kes_path.write_text(
+            json.dumps(kes_items, ensure_ascii=False, indent=2) + "\n",
+            encoding="utf-8",
+        )
+    stats["kes_items_written"] = len(kes_items)
 
     print(
         "Готово:",
@@ -315,7 +501,13 @@ def main() -> None:
         f"anchors_unwrapped={stats['anchor_unwrapped']}",
         f"empty_anchors_removed={stats['empty_anchor_removed']}",
         f"empty_tags_removed={stats['empty_tag_removed']}",
+        f"empty_tables_removed={stats['empty_table_removed']}",
+        f"attachments_notice_removed={stats['attachments_notice_removed']}",
+        f"attachment_link_rows_removed={stats['attachment_link_rows_removed']}",
         f"wrappers_unwrapped={stats['wrapper_unwrapped']}",
+        f"kes_items_written={stats['kes_items_written']}",
+        f"kes_conflicts={stats['kes_conflicts']}",
+        f"kes_invalid_items={stats['kes_invalid_items']}",
     )
 
 

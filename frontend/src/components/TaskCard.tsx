@@ -76,6 +76,33 @@ export function TaskCard({ task, onEdit, onKesClick }: Props) {
             </Stack>
           </Box>
         ) : null}
+        {task.attachments?.length ? (
+          <Box sx={{ mt: 1 }}>
+            <Divider sx={{ my: 1 }} />
+            <Typography variant="subtitle2" sx={{ mb: 0.5 }}>
+              Файлы
+            </Typography>
+            <Stack direction="row" spacing={1} flexWrap="wrap" rowGap={1}>
+              {task.attachments.map((att) => {
+                const label = att.text?.trim() || att.href;
+                const href = att.href.startsWith("http") ? att.href : `/assets/${att.href}`;
+                return (
+                  <Chip
+                    key={att.href}
+                    size="small"
+                    label={label}
+                    component="a"
+                    href={href}
+                    target="_blank"
+                    rel="noreferrer"
+                    clickable
+                    variant="outlined"
+                  />
+                );
+              })}
+            </Stack>
+          </Box>
+        ) : null}
         {task.meta?.["КЭС"]?.length ? (
           <Box sx={{ mt: 1 }}>
             <Divider sx={{ my: 1 }} />
