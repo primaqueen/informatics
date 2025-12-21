@@ -1,0 +1,18 @@
+---
+id: "4ADA78"
+answer_type: short_answer
+kes:
+  - "3.7"
+  - "3.16"
+  - "3.17"
+hint: ""
+---
+
+Ниже на пяти языках программирования записаны две рекурсивные функции (процедуры): F и G.
+
+
+<table> <tr> <td> <p><b>Бейсик</b></p> </td> <td> <p><b>Python</b></p> </td> </tr> <tr> <td> <p>DECLARE SUB F(n)</p> <p>DECLARE SUB G(n) 
+
+SUB F(n)</p> <p>  IF n &gt; 0 THEN G(n - 1)</p> <p>END SUB</p> <p>SUB G(n)</p> <p>  PRINT "*"</p> <p>  IF n &gt; 1 THEN F(n - 3)</p> <p>END SUB</p> </td> <td> <p>def F(n):</p> <p>    if n &gt; 0:</p> <p>        G(n - 1)</p> <p>def G(n):</p> <p>    print("*")</p> <p>    if n &gt; 1:</p> <p>        F(n - 3)</p> </td> </tr> <tr> <td> <p><b>Алгоритмический язык</b></p> </td> <td> <p><b>Паскаль</b></p> </td> </tr> <tr> <td> <p><u>алг</u> F(<u>цел </u>n)</p> <p><u>нач</u></p> <p> <u>если </u>n &gt; 0 <u>то</u></p> <p>    G(n - 1)</p> <p> <u>все</u></p> <p><u>кон</u></p> <p><u>алг</u> G(<u>цел </u>n)</p> <p><u>нач</u></p> <p> <u>вывод </u>"*"</p> <p> <u>если </u>n &gt; 1 <u>то</u></p> <p>    F(n - 3)</p> <p> <u>все</u></p> <p><u>кон</u></p> </td> <td> <p>procedure F(n: integer); forward;</p> <p>procedure G(n: integer); forward;</p> <p>procedure F(n: integer);</p> <p>begin</p> <p>  if n &gt; 0 then</p> <p>    G(n - 1);</p> <p>end;</p> <p>procedure G(n: integer);</p> <p>begin</p> <p>  writeln('*');</p> <p>  if n &gt; 1 then</p> <p>    F(n - 3);</p> <p>end;</p> </td> </tr> <tr> <td colspan="2"> <p><b>Си</b></p> </td> </tr> <tr> <td colspan="2"> <p>void F(int n);
+void G(int n);</p> <p>void F(int n){</p> <p>  if (n &gt; 0)</p> <p>    G(n - 1);</p> <p>}</p> <p>void G(int n){</p> <p>  printf("*");</p> <p>  if (n &gt; 1)</p> <p>    F(n - 3);</p> <p>}</p> </td> </tr> </table>
+Сколько символов «звёздочка» будет напечатано на экране при выполнении вызова F(12)?

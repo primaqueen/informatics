@@ -1,0 +1,14 @@
+---
+id: "973F9C"
+answer_type: short_answer
+kes:
+  - "3.2"
+  - "3.6"
+hint: ""
+---
+
+Напишите в ответе число, равное количеству различных значений входной переменной *k*, при которых приведённая ниже программа выводит тот же ответ, что и при входном значении *k *= 25. Значение *k *= 25 также включается в подсчёт количества различных значений *k*. Для Вашего удобства программа приведена на пяти языках программирования.
+
+
+<table> <tr> <td> <p><b>Бейсик</b></p> </td> <td> <p><b>Python</b></p> </td> </tr> <tr> <td> <p>DIM K, I AS LONG</p> <p>INPUT K</p> <p>I = 1</p> <p>WHILE F(I) &lt; K</p> <p>  I = I + 1</p> <p>WEND</p> <p>IF F(I)-K &lt;= K-F(I-1) THEN</p> <p>  PRINT I</p> <p>ELSE</p> <p>  PRINT I-1</p> <p>END IF</p> <p>FUNCTION F(N)
+   F = N * N * N</p> <p>END FUNCTION</p> </td> <td> <p>def f(n):</p> <p>  return n*n*n</p> <p>i = 1</p> <p>k = int(input())</p> <p>while f(i) &lt; k:</p> <p>  i+=1</p> <p>if (f(i)-k &lt;= k-f(i-1)):</p> <p>  print (i)</p> <p>else:</p> <p>  print (i - 1)</p> </td> </tr> <tr> <td> <p><b>Алгоритмический</b><b>язык</b></p> </td> <td> <p><b>Паскаль</b></p> </td> </tr> <tr> <td> <p><u>алг</u></p> <p><u>нач</u></p> <p> <u>цел</u> i, k</p> <p> <u>ввод</u> k</p> <p>  i := 1</p> <p> <u>нц</u> <u>пока</u> f(i) &lt; k</p> <p>    i := i + 1</p> <p> <u>кц</u></p> <p> <u>если</u> f(i)-k &lt;= k-f(i-1) <u>то</u></p> <p> <u>вывод</u> i</p> <p> <u>иначе</u></p> <p> <u>вывод</u> i-1</p> <p> <u>все</u></p> <p><u>кон</u></p> <p><u>алг</u> <u>цел</u> f(<u>цел</u> n)</p> <p><u>нач</u></p> <p> <u>знач</u> := n * n * n</p> <p><u>кон</u></p> </td> <td> <p>var</p> <p>  k, i : longint;</p> <p>function f(n: longint) : longint;</p> <p>begin</p> <p>  f := n * n * n;</p> <p>end;</p> <p>begin</p> <p>  readln(k);</p> <p>  i := 1;</p> <p>  while f(i) &lt; k do </p> <p>    i := i+1;</p> <p>  if f(i)-k &lt;= k-f(i-1) then</p> <p>    writeln(i)</p> <p>  else</p> <p>    writeln(i-1); </p> <p>end.</p> </td> </tr> <tr> <td colspan="2"> <p><b>Си</b></p> </td> </tr> <tr> <td colspan="2"> <p>#include&lt;stdio.h&gt;</p> <p>long f(long n) {</p> <p>  return n * n * n;</p> <p>}</p> <p>void main()</p> <p>{</p> <p>  long k, i;</p> <p>  scanf("%ld", &amp;k);</p> <p>  i = 1;</p> <p>  while (f(i)&lt;k)</p> <p>    i++; </p> <p>  if (f(i)-k &lt;= k-f(i-1)){</p> <p>    printf("%ld", i);</p> <p>  } else {</p> <p>    printf("%ld", i-1);</p> <p>  }</p> <p>}</p> </td> </tr> </table>

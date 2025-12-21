@@ -1,0 +1,12 @@
+---
+id: "4ABD5E"
+answer_type: short_answer
+kes:
+  - "3.1"
+hint: ""
+---
+
+Ниже на четырёх языках программирования записан алгоритм. Получив на вход натуральное число *x*, этот алгоритм печатает число *R*. Укажите такое число *x*, при вводе которого алгоритм печатает двузначное число, последняя цифра которого – 9. Если таких чисел *x* несколько, укажите **наименьшее** из них.
+
+
+<table> <tr> <td> <p><b>С ++</b></p> </td> <td> <p><b>Python</b></p> </td> <td> <p><b>Алгоритмический</b><b> язык</b></p> </td> <td> <p><b>Паскаль</b></p> </td> </tr> <tr> <td> <p>#include &lt;iostream&gt;</p> <p>using namespace std;</p> <p>int main()</p> <p>{</p> <p>  int x, d, R;</p> <p>  cin &gt;&gt; x;</p> <p>  R = 0;</p> <p>  while (x &gt; 0){</p> <p>    d = x % 10;</p> <p>    R = 10 * R + d;</p> <p>    x = x / 10;</p> <p>  }</p> <p>  cout &lt;&lt; R &lt;&lt; endl;</p> <p>  return 0;</p> <p>}</p> </td> <td> <p>x = int(input())</p> <p>R = 0</p> <p>while x &gt; 0:</p> <p>    d = x % 10</p> <p>    R = 10 * R + d</p> <p>    x = x // 10</p> <p>print(R)</p> </td> <td> <p><u>алг </u></p> <p><u>нач</u></p> <p> <u>цел</u> x, d, R </p> <p> <u>ввод</u> x</p> <p>  R := 0</p> <p> <u>нц</u> <u>пока</u> x &gt; 0 </p> <p>    d := mod(x, 10)</p> <p>    R := 10 * R + d</p> <p>    x := div(x, 10)</p> <p> <u>кц</u></p> <p> <u>вывод</u> R</p> <p><u>кон </u></p> <p></p> </td> <td> <p>var</p> <p> x, d, R: longint;</p> <p>begin</p> <p>  readln(x);</p> <p>  R := 0;</p> <p>  while x &gt; 0 do</p> <p>   begin</p> <p>    d := x mod 10;</p> <p>    R := 10 * R + d;</p> <p>    x := x div 10</p> <p>   end;</p> <p>  writeln(R)</p> <p>end.</p> </td> </tr> </table>

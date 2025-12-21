@@ -1,0 +1,21 @@
+---
+id: "71C1C5"
+answer_type: short_answer
+kes:
+  - "3.1"
+hint: ""
+---
+
+Ниже на четырёх языках программирования записан алгоритм. Получив на вход число *x*, этот алгоритм печатает два числа: *L *и *M*. Укажите наибольшее число *x*, при вводе которого алгоритм печатает сначала 12, а потом 19.
+
+
+<table> <tr> <td> <p><b>С++</b><b></b></p> </td> <td> <p><b>Python</b><b></b></p> </td> </tr> <tr> <td> <p>#include &lt;iostream&gt;using namespace std;</p> <p>int main(){</p> <p>int x, K1, K2, Q, P, L, M;  cin &gt;&gt; x;  Q = 8;  P = 10;</p> <p>  K1 = 0;</p> <p>  K2 = 0;  while (x &lt;= 100){    K1 = K1 + 1;    x = x + P;  }</p> <p>  while (x &gt;= Q){    K2 = K2 + 1;    x = x - Q;  }</p> <p>  L = x + K1;</p> <p>  M = x + K2;  cout &lt;&lt; L &lt;&lt; endl &lt;&lt; M &lt;&lt; endl;  return 0;}</p> </td> <td> <p>x = int(input())Q = 8</p> <p>P = 10K1 = 0</p> <p>K2 = 0while x &lt;= 100:  K1 = K1 + 1  x = x + P</p> <p>while x &gt;= Q:  K2 = K2 + 1  x = x - QL = x + K1</p> <p>M = x + K2print(L)print(M)</p> </td> </tr> <tr> <td> <p><b>Алгоритмический язык</b><b></b></p> </td> <td> <p><b>Паскаль</b><b></b></p> </td> </tr> <tr> <td> <p><u>алг</u><u>нач</u> <u>цел</u> x, K1, K2, Q, P, L, M  <u>ввод</u> xQ := 8</p> <p>  P := 10
+   K1 := 0</p> <p>  K2 := 0
+   <u>нц</u> <u>пока</u> x &lt;= 100
+     K1 := K1 + 1
+     x := x + P
+   <u>кц</u>
+<u>нц</u> <u>пока</u> x &gt;= Q
+     K2 := K2 + 1
+     x := x - Q
+   <u>кц</u></p> <p>  L := x + K1</p> <p>  M := x + K2  <u>вывод</u> L<i>, </i><u>нс</u><i>, </i>M<u>кон</u></p> </td> <td> <p>var x, K1, K2, Q, P, L, M: integer;begin  readln(x);  Q := 8;  P := 10;</p> <p>  K1 := 0;</p> <p>  K2 := 0;  while x &lt;= 100 do  begin    K1 := K1 + 1;    x := x + P;  end;  while x &gt;= Q do  begin    K2 := K2 + 1;    x := x - Q;  end; </p> <p>  L := x + K1;</p> <p>  M := x + K2;  writeln(L);  writeln(M);end.</p> </td> </tr> </table>

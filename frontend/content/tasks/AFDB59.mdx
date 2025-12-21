@@ -1,0 +1,12 @@
+---
+id: "AFDB59"
+answer_type: short_answer
+kes:
+  - "3.1"
+hint: ""
+---
+
+Ниже на пяти языках программирования записан алгоритм. Получив на вход число *x*, этот алгоритм печатает два числа: *L* и *M*. Укажите **наименьшее** число *x*, при вводе которого алгоритм печатает сначала 5, а потом 7.
+
+
+<table> <tr> <td> <p><b>Бейсик</b></p> </td> <td> <p><b>Python</b></p> </td> </tr> <tr> <td> <p>DIM X, L, M AS INTEGER</p> <p>INPUT X</p> <p>L = 0</p> <p>M = 0</p> <p>WHILE X &gt; 0</p> <p>M = M + 1</p> <p>IF X MOD 2 &lt;&gt; 0 THEN</p> <p> L = L + 1</p> <p>END IF</p> <p>X = X \ 2</p> <p>WEND</p> <p>PRINT L</p> <p>PRINT M</p> </td> <td> <p>x = int(input())</p> <p>L = 0</p> <p>M = 0</p> <p>while x &gt; 0:</p> <p>    M = M + 1</p> <p>    if x % 2 != 0:</p> <p>        L = L + 1</p> <p>    x = x // 2</p> <p>print(L)</p> <p>print(M)</p> </td> </tr> <tr> <td> <p><b>Алгоритмический язык</b></p> </td> <td> <p><b>Паскаль</b></p> </td> </tr> <tr> <td> <p><u>алг </u></p> <p><u>нач</u></p> <p> <u>цел</u> x, L, M</p> <p> <u>ввод</u> x</p> <p>  L := 0</p> <p>  M := 0</p> <p> <u>нц</u> <u>пока</u> x &gt; 0</p> <p>    M := M + 1</p> <p> <u>если</u> mod(x,2) &lt;&gt; 0</p> <p> <u>то</u></p> <p>        L := L + 1</p> <p> <u>все</u></p> <p>    x := div(x,2)</p> <p> <u>кц</u></p> <p> <u>вывод</u> L, <u>нс</u>, M</p> <p><u>кон</u></p> </td> <td> <p>var x, L, M: integer;</p> <p>begin</p> <p>  readln(x);</p> <p>  L := 0;</p> <p>  M := 0;</p> <p>  while x &gt; 0 do</p> <p>  begin</p> <p>    M := M + 1;</p> <p>    if x mod 2 &lt;&gt; 0 then </p> <p>      L := L + 1;</p> <p>    x := x div 2;</p> <p>  end;</p> <p>  writeln(L);</p> <p>  writeln(M);</p> <p>end.</p> </td> </tr> <tr> <td colspan="2"> <p><b>Си</b></p> </td> </tr> <tr> <td colspan="2"> <p>#include&lt;stdio.h&gt;</p> <p>void main()</p> <p>{</p> <p>  int x, L, M;</p> <p>  scanf("%d", &amp;x);</p> <p>  L = 0;</p> <p>  M = 0;</p> <p>  while (x &gt; 0){</p> <p>    M = M + 1;</p> <p>    if(x % 2 != 0){</p> <p>      L = L + 1;</p> <p>    }</p> <p>    x = x / 2;</p> <p>  }</p> <p>  printf("%d\n%d", L, M);</p> <p>}</p> </td> </tr> </table>

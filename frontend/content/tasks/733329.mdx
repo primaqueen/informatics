@@ -1,0 +1,12 @@
+---
+id: "733329"
+answer_type: short_answer
+kes:
+  - "3.1"
+hint: ""
+---
+
+Ниже на пяти языках программирования записан алгоритм. Получив на вход число *x*, этот алгоритм печатает два числа: *L* и *M*. Укажите **наибольшее** число *x*, при вводе которого алгоритм печатает сначала 3, а потом 5.
+
+
+<table> <tr> <td> <p><b>Бейсик</b></p> </td> <td> <p><b>Python</b></p> </td> </tr> <tr> <td> <p>DIM X, L, M, Q AS INTEGER</p> <p>INPUT X</p> <p>Q = 6</p> <p>L = 0</p> <p>WHILE X &gt;= Q</p> <p> L = L + 1</p> <p> X = X - Q</p> <p>WEND</p> <p>M = X</p> <p>IF M &lt; L THEN</p> <p>   M = L</p> <p>   L = X</p> <p>END IF</p> <p>PRINT L</p> <p>PRINT M</p> </td> <td> <p>x = int(input())</p> <p>Q = 6</p> <p>L = 0</p> <p>while x &gt;= Q:</p> <p>    L = L + 1</p> <p>    x = x - Q</p> <p>M = x</p> <p>if M &lt; L:</p> <p>    M = L</p> <p>    L = x</p> <p>print(L)</p> <p>print(M)</p> </td> </tr> <tr> <td> <p><b>Алгоритмический язык</b></p> </td> <td> <p><b>Паскаль</b></p> </td> </tr> <tr> <td> <p><u>алг </u></p> <p><u>нач</u></p> <p> <u>цел</u> x, L, M, Q</p> <p> <u>ввод</u> x</p> <p>  Q := 6</p> <p>  L := 0</p> <p> <u>нц</u> <u>пока</u> x &gt;= Q</p> <p>    L := L + 1</p> <p>    x := x - Q</p> <p> <u>кц</u></p> <p>  M := x</p> <p> <u>если</u> M &lt; L</p> <p> <u>то</u></p> <p>      M := L</p> <p>      L := x</p> <p> <u>все</u></p> <p> <u>вывод</u> L, <u>нс</u>, M</p> <p><u>кон</u></p> </td> <td> <p>var x, L, M, Q: integer;</p> <p>begin</p> <p>  readln(x);</p> <p>  Q := 6</p> <p>  L := 0;</p> <p>  while x &gt;= Q do</p> <p>  begin</p> <p>    L := L + 1;</p> <p>    x := x - Q;</p> <p>  end;</p> <p>  M := x;</p> <p>  if M &lt; L then</p> <p>  begin</p> <p>    M := L;</p> <p>    L := x;</p> <p>  end;</p> <p>  writeln(L);</p> <p>  writeln(M);</p> <p>end.</p> </td> </tr> <tr> <td colspan="2"> <p><b>Си</b></p> </td> </tr> <tr> <td colspan="2"> <p>#include&lt;stdio.h&gt;</p> <p>void main()</p> <p>{</p> <p>  int x, L, M, Q;</p> <p>  scanf("%d", &amp;x);</p> <p>  Q = 6;</p> <p>  L = 0;</p> <p>  while (x &gt;= Q){</p> <p>    L = L + 1;</p> <p>    x = x - Q;</p> <p>  }</p> <p>  M = x;</p> <p>  if(M &lt; L){</p> <p>    M = L;</p> <p>    L = x;</p> <p>  }</p> <p>  printf("%d\n%d", L, M);</p> <p>}</p> </td> </tr> </table>

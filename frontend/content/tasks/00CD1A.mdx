@@ -1,0 +1,16 @@
+---
+id: "00CD1A"
+answer_type: short_answer
+kes:
+  - "3.2"
+  - "3.6"
+hint: ""
+---
+
+Определите **наибольшее** значение входной переменной *k*, при котором программа выдаёт тот же ответ, что и при входном значении *k* = 45. 
+Для Вашего удобства программа приведена на пяти языках программирования.
+
+
+<table> <tr> <td> <p><b>Бейсик</b></p> </td> <td> <p>DIM K, I AS LONG</p> <p>INPUT K</p> <p>I = 1</p> <p>WHILE F(I) &lt; G(K)</p> <p>  I = I + 1</p> <p>WEND</p> <p>PRINT I</p> <p>FUNCTION F(N)
+   F = N * N * N</p> <p>END FUNCTION</p> <p>FUNCTION G(N)
+   G = 2 * N + 5</p> <p>END FUNCTION</p> </td> </tr> <tr> <td> <p><b>Python</b></p> </td> <td> <p>def F(n):</p> <p>    return n*n*n</p> <p>def G(n):</p> <p>    return 2 * n + 5</p> <p>k = int(input())</p> <p>i = 1</p> <p>while F(i) &lt; G(k):</p> <p>    i+=1</p> <p>print (i)</p> </td> </tr> <tr> <td> <p><b>Алгоритмический язык</b></p> </td> <td> <p><u>алг</u></p> <p><u>нач</u></p> <p> <u>цел</u> i, k</p> <p> <u>ввод</u> k</p> <p>  i := 1</p> <p> <u>нц</u> <u>пока</u> f(i) &lt; g(k)</p> <p>    i := i + 1</p> <p> <u>кц</u></p> <p> <u>вывод</u> i</p> <p><u>кон</u></p> <p></p> <p><u>алг</u> <u>цел</u> f(<u>цел</u> n)</p> <p><u>нач</u></p> <p> <u>знач</u> := n * n * n</p> <p><u>кон</u></p> <p></p> <p><u>алг</u> <u>цел</u> g(<u>цел</u> n)</p> <p><u>нач</u></p> <p> <u>знач</u> := 2 * n + 5</p> <p><u>кон</u></p> </td> </tr> <tr> <td> <p><b>Паскаль</b></p> </td> <td> <p>var</p> <p>  k, i : longint;</p> <p>function F(n: longint): longint;</p> <p>begin</p> <p>  F := n * n * n;</p> <p>end;</p> <p>function G(n: longint): longint;</p> <p>begin</p> <p>  G := 2 * n + 5;</p> <p>end;</p> <p>begin</p> <p>  readln(k);</p> <p>  i := 1;</p> <p>  while F(i) &lt; G(k) do </p> <p>    i := i + 1;</p> <p>  writeln(i)</p> <p>end.</p> </td> </tr> <tr> <td> <p><b>C++</b></p> </td> <td> <p>#include &lt;iostream&gt;</p> <p>using namespace std;</p> <p>long F(long n) {</p> <p>  return n * n * n;</p> <p>}</p> <p>long G(long n) {</p> <p>  return 2 * n + 5;</p> <p>}</p> <p>int main()</p> <p>{</p> <p>  long k, i;</p> <p>  cin &gt;&gt; k;</p> <p>  i = 1;</p> <p>  while(F(i) &lt; G(k))</p> <p>    i++; </p> <p>  cout &lt;&lt; i;</p> <p>  return 0;</p> <p>}</p> </td> </tr> </table>

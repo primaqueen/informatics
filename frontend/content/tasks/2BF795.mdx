@@ -1,0 +1,16 @@
+---
+id: "2BF795"
+answer_type: short_answer
+kes:
+  - "3.2"
+  - "3.3"
+  - "3.4"
+  - "3.5"
+hint: ""
+---
+
+В программе используется одномерный целочисленный массив A 
+с индексами от 0 до 9. Значения элементов равны 20, 19, 17, 41, 15, 42, 24, 56, 4, 13 соответственно, т.е. A[0] = 20, A[1] = 19 и т.д. Определите значение переменной *s* после выполнения следующего фрагмента этой программы (записанного ниже на пяти языках программирования).
+
+
+<table> <tr> <td> <p><b>Бейсик</b></p> </td> <td> <p><b>Python</b></p> </td> </tr> <tr> <td> <p>s = 0</p> <p>n = 4</p> <p>FOR i = 0 TO 9</p> <p>    IF A(i) &gt;= A(n) THEN</p> <p>        s = s + A(i) MOD A(n)</p> <p>        t = A(i)</p> <p>        A(i) = A(n)</p> <p>        A(n) = t</p> <p>   END IF</p> <p>NEXT i </p> </td> <td> <p>s = 0</p> <p>n = 4</p> <p>for i in range(10):</p> <p>    if A[i] &gt;= A[n]:</p> <p>        s += A[i] % A[n]</p> <p>        t = A[i]</p> <p>        A[i] = A[n]</p> <p>        A[n] = t</p> </td> </tr> <tr> <td> <p><b>Алгоритмический язык</b></p> </td> <td> <p><b>Паскаль</b></p> </td> </tr> <tr> <td> <p>s := 0</p> <p>n := 4</p> <p><u>нц</u> <u>для</u> i <u>от</u> 0 <u>до</u> 9</p> <p> <u>если</u> A[i] &gt;= A[n] <u>то</u></p> <p>     s := s + mod(A[i], A[n])</p> <p>     t := A[i]</p> <p>     A[i] := A[n]</p> <p>     A[n] := t</p> <p> <u>все</u></p> <p><u>кц</u></p> </td> <td> <p>s := 0;</p> <p>n := 4;</p> <p>for i := 0 to 9 do</p> <p>   if A[i] &gt;= A[n] then</p> <p>   begin</p> <p>     s := s + A[i] mod A[n];</p> <p>     t := A[i];</p> <p>     A[i] := A[n];</p> <p>     A[n] := t</p> <p>   end; </p> </td> </tr> <tr> <td colspan="2"> <p><b>С</b><b>++</b></p> </td> </tr> <tr> <td colspan="2"> <p>s = 0;</p> <p>n = 4;</p> <p>for (int i = 0; i &lt; 10; i++)</p> <p>     if (A[i] &gt;= A[n]){</p> <p>         s += A[i] % A[n];</p> <p>         t = A[i];</p> <p>         A[i] = A[n];</p> <p>         A[n] = t;</p> <p>     }</p> </td> </tr> </table>

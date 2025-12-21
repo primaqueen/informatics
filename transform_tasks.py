@@ -25,6 +25,7 @@ import json
 import re
 from collections import Counter
 from pathlib import Path
+from urllib.parse import urlsplit
 
 from bs4 import BeautifulSoup, NavigableString, Tag
 
@@ -92,6 +93,28 @@ def parse_args() -> argparse.Namespace:
         type=Path,
         default=Path("reference/kes.json"),
         help="Куда записать справочник КЭС (id/text/section)",
+    )
+    parser.add_argument(
+        "--internal-id-to-task-number",
+        type=Path,
+        default=Path("internal_id_to_task_number.json"),
+        help="JSON со связкой internal_id -> номер задания (используется для фильтрации)",
+    )
+    parser.add_argument(
+        "--drop-images-for-task-number",
+        type=int,
+        action="append",
+        default=[],
+        help=(
+            "Для указанных номеров заданий удалить картинки с заданными расширениями "
+            "(можно повторять)"
+        ),
+    )
+    parser.add_argument(
+        "--drop-image-ext",
+        action="append",
+        default=[".png", ".gif"],
+        help="Расширения картинок для удаления (можно повторять), по умолчанию: .png и .gif",
     )
     return parser.parse_args()
 
@@ -224,10 +247,52 @@ def code_sort_key(value: str) -> tuple[int, ...]:
     return tuple(parts)
 
 
-def clean_html(raw_html: str, stats: Counter[str]) -> tuple[str, bool]:
+def url_extension(url: str) -> str:
+    parsed = urlsplit(url.strip())
+    return Path(parsed.path).suffix.lower()
+
+
+def drop_images_field(row: dict, drop_exts: set[str], stats: Counter[str]) -> None:
+    images = row.get("images")
+    if not isinstance(images, list):
+        return
+    kept: list[dict] = []
+    removed = 0
+    for item in images:
+        if not isinstance(item, dict):
+            kept.append(item)
+            continue
+        src = str(item.get("src", ""))
+        if url_extension(src) in drop_exts:
+            removed += 1
+            continue
+        kept.append(item)
+    if removed:
+        row["images"] = kept
+        stats["images_field_dropped"] += removed
+
+
+def clean_html(
+    raw_html: str,
+    stats: Counter[str],
+    *,
+    drop_img_exts: set[str] | None = None,
+) -> tuple[str, bool]:
     html = strip_import_pis(raw_html)
     soup = BeautifulSoup(f"<root>{html}</root>", "html.parser")
     root = soup.find("root") or soup
+
+    if drop_img_exts:
+        removed = 0
+        for img in list(root.find_all("img")):
+            src = str(img.get("src", "")).strip()
+            if not src:
+                continue
+            if url_extension(src) in drop_img_exts:
+                img.decompose()
+                removed += 1
+        if removed:
+            stats["img_tag_removed_by_ext"] += removed
 
     # Чистим теги и атрибуты до специфичных замен
     for tag in list(root.find_all(True)):
@@ -261,11 +326,17 @@ def clean_html(raw_html: str, stats: Counter[str]) -> tuple[str, bool]:
                     script.insert_before(link)
                     stats["showpictureq2_link"] += 1
                 if img_name:
+                    if drop_img_exts and url_extension(img_name) in drop_img_exts:
+                        stats["showpictureq2_img_dropped"] += 1
+                        continue
                     img = soup.new_tag("img", src=f"assets/{img_name}", alt="")
                     script.insert_before(img)
                     stats["showpictureq2_img"] += 1
             # ShowPictureQ('file')
         for fname in re.findall(r"ShowPictureQ\('([^']+)'", content):
+            if drop_img_exts and url_extension(fname) in drop_img_exts:
+                stats["showpictureq_img_dropped"] += 1
+                continue
             img = soup.new_tag("img", src=f"assets/{fname}", alt="")
             script.insert_before(img)
             stats["showpictureq_replaced"] += 1
@@ -416,9 +487,35 @@ def main() -> None:
     stats: Counter[str] = Counter()
     kes_text_by_code: dict[str, str] = {}
 
+    drop_internal_ids: set[str] = set()
+    drop_exts: set[str] = set()
+    if args.drop_images_for_task_number:
+        raw = json.loads(args.internal_id_to_task_number.read_text(encoding="utf-8"))
+        if isinstance(raw, dict):
+            wanted = set(args.drop_images_for_task_number)
+            drop_internal_ids = {
+                str(iid).strip().lower()
+                for iid, num in raw.items()
+                if isinstance(iid, str) and num in wanted
+            }
+            drop_exts = {
+                str(ext).lower() for ext in args.drop_image_ext if str(ext).startswith(".")
+            }
+            print(
+                "Фильтрация картинок включена:",
+                f"номера={sorted(wanted)}",
+                f"internal_id={len(drop_internal_ids)}",
+                f"расширения={sorted(drop_exts)}",
+            )
+
     with args.input.open() as fin, args.output.open("w") as fout:
         for line in fin:
             row = json.loads(line)
+
+            internal_id = str(row.get("internal_id", "")).strip().lower()
+            apply_drop = bool(drop_internal_ids) and internal_id in drop_internal_ids
+            if apply_drop and drop_exts:
+                drop_images_field(row, drop_exts, stats)
 
             meta = row.get("meta")
             if isinstance(meta, dict):
@@ -453,7 +550,9 @@ def main() -> None:
                     meta["КЭС"] = codes
 
             raw_html = row.get("question_html", "")
-            cleaned_html, banner_removed = clean_html(raw_html, stats)
+            cleaned_html, banner_removed = clean_html(
+                raw_html, stats, drop_img_exts=drop_exts if apply_drop else None
+            )
             row["question_html_clean"] = cleaned_html
             row["question_md"] = html_to_markdown(cleaned_html)
             has_attachments = bool(row.get("attachments"))
@@ -496,12 +595,16 @@ def main() -> None:
         f"math_dash_replaced={stats['math_dash_replaced']}",
         f"math_kept={stats['math_kept']}",
         f"ShowPictureQ→img={stats['showpictureq_replaced']}",
+        f"ShowPictureQ_dropped={stats['showpictureq_img_dropped']}",
         f"ShowPictureQ2WH→link={stats['showpictureq2_link']}",
         f"ShowPictureQ2WH→img={stats['showpictureq2_img']}",
+        f"ShowPictureQ2WH_dropped={stats['showpictureq2_img_dropped']}",
         f"anchors_unwrapped={stats['anchor_unwrapped']}",
         f"empty_anchors_removed={stats['empty_anchor_removed']}",
         f"empty_tags_removed={stats['empty_tag_removed']}",
         f"empty_tables_removed={stats['empty_table_removed']}",
+        f"img_tag_removed_by_ext={stats['img_tag_removed_by_ext']}",
+        f"images_field_dropped={stats['images_field_dropped']}",
         f"attachments_notice_removed={stats['attachments_notice_removed']}",
         f"attachment_link_rows_removed={stats['attachment_link_rows_removed']}",
         f"wrappers_unwrapped={stats['wrapper_unwrapped']}",

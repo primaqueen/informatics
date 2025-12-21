@@ -1,0 +1,33 @@
+---
+id: "C629FB"
+answer_type: short_answer
+kes:
+  - "3.2"
+  - "3.6"
+hint: ""
+---
+
+На обработку поступает натуральное число, не превышающее $10^{9}$. Нужно написать программу, которая выводит на экран минимальную цифру числа, делящуюся на 3. Если в числе нет цифр, делящихся на 3, на экран требуется вывести «NO». Программист написал программу неправильно. Ниже эта программа для Вашего удобства приведена на пяти языках программирования.
+
+***Напоминание*:** 0 делится на любое натуральное число.
+
+
+<table> <tr> <td> <p><b>Бейсик</b></p> </td> <td> <p><b>Python</b></p> </td> </tr> <tr> <td> <p>DIM N, DIGIT, MINDIGIT AS LONG</p> <p>INPUT N</p> <p>MINDIGIT = 9</p> <p>WHILE N &gt; 0</p> <p>  DIGIT = N MOD 10</p> <p>  IF DIGIT MOD 3 = 0  THEN</p> <p>    IF DIGIT &lt; MINDIGIT THEN</p> <p>      DIGIT = MINDIGIT</p> <p>    END IF</p> <p>  END IF</p> <p>  N = N \ 10</p> <p>WEND</p> <p>IF MINDIGIT &lt;= 9 THEN</p> <p>  PRINT MINDIGIT </p> <p>ELSE</p> <p>  PRINT "NO"</p> <p>END IF</p> </td> <td> <p>N = int(input())</p> <p>minDigit = 9</p> <p>while N &gt; 0:</p> <p>  digit = N % 10</p> <p>  if digit % 3 == 0:</p> <p>    if digit &lt; minDigit:</p> <p>      digit = minDigit</p> <p>  N = N // 10</p> <p>if minDigit &lt;= 9:</p> <p>  print(minDigit)</p> <p>else:</p> <p>  print("NO")</p> </td> </tr> <tr> <td> <p><b>Алгоритмический язык</b></p> </td> <td> <p><b>Паскаль</b></p> </td> </tr> <tr> <td> <p><u>алг</u> </p> <p><u>нач</u></p> <p> <u>цел</u> N, digit, minDigit</p> <p> <u>ввод</u> N</p> <p>  minDigit := 9</p> <p> <u>нц</u> <u>пока</u> N &gt; 0</p> <p>    digit := mod(N,10)</p> <p> <u>если</u> mod(digit, 3) = 0 <u>то</u></p> <p> <u>если</u> digit &lt; minDigit <u>то</u></p> <p>        digit := minDigit</p> <p> <u>все</u></p> <p> <u>все</u></p> <p>    N := div(N,10)</p> <p> <u>кц</u></p> <p> <u>если</u> minDigit &lt;= 9 <u>то</u></p> <p> <u>вывод</u> minDigit </p> <p> <u>иначе</u></p> <p> <u>вывод</u> "NO"</p> <p> <u>все</u></p> <p><u>кон</u></p> </td> <td> <p>var N,digit,minDigit: longint;</p> <p>begin</p> <p>  readln(N);</p> <p>  minDigit := 9;</p> <p>  while N &gt; 0 do </p> <p>  begin</p> <p>    digit := N mod 10;</p> <p>    if digit mod 3 = 0 then</p> <p>      if digit &lt; minDigit then</p> <p>        digit := minDigit;</p> <p>    N := N div 10;</p> <p>  end;</p> <p>  if minDigit &lt;= 9 then</p> <p>    writeln(minDigit)</p> <p>  else</p> <p>    writeln('NO')</p> <p>end.</p> </td> </tr> </table>
+
+<table> <tr> <td> <p><b>С</b><b>++</b></p> </td> </tr> <tr> <td> <p>#include &lt;iostream&gt;</p> <p>using namespace std;</p> <p>int main()</p> <p>{</p> <p>  int N, digit, minDigit;</p> <p>  cin &gt;&gt; N;</p> <p>  minDigit = 9;</p> <p>  while (N &gt; 0) </p> <p>  {</p> <p>    digit = N % 10;</p> <p>    if (digit % 3 == 0)</p> <p>      if (digit &lt; minDigit)</p> <p>        digit = minDigit;</p> <p>    N = N / 10;</p> <p>  }</p> <p>  if (minDigit &lt;= 9)</p> <p>    cout &lt;&lt; minDigit &lt;&lt; endl;</p> <p>  else</p> <p>    cout &lt;&lt; "NO" &lt;&lt; endl;</p> <p>  return 0;</p> <p>}</p> </td> </tr> </table>
+Последовательно выполните следующее.
+
+1. Напишите, что выведет эта программа при вводе числа 143.
+
+2. Приведите пример такого трёхзначного числа, при вводе которого программа выдаёт верный ответ.
+
+3. Найдите все ошибки в этой программе (их может быть одна или несколько). Известно, что каждая ошибка затрагивает только одну строку 
+и может быть исправлена без изменения других строк. Для каждой ошибки:
+
+1. выпишите строку, в которой сделана ошибка;
+
+2. укажите, как исправить ошибку, т.е. приведите правильный вариант строки.
+
+Достаточно указать ошибки и способ их исправления для одного языка программирования.
+
+Обратите внимание на то, что требуется найти ошибки в имеющейся программе, а не написать свою, возможно, использующую другой алгоритм решения. Исправление ошибки должно затрагивать только строку, в которой находится ошибка.

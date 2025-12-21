@@ -1,0 +1,25 @@
+---
+id: "89926C"
+answer_type: short_answer
+kes:
+  - "3.1"
+hint: ""
+---
+
+Ниже на четырёх языках программирования записан алгоритм. Получив на вход число *x*, этот алгоритм печатает два числа: *S *и *P*. Укажите наибольшее число *x*, при вводе которого алгоритм печатает сначала 8, а потом 4.
+
+
+<table> <tr> <td> <p><b>С++</b><b></b></p> </td> <td> <p><b>Python</b><b></b></p> </td> </tr> <tr> <td> <p>#include &lt;iostream&gt;
+using namespace std;</p> <p>int main()
+{  </p> <p>  int x, P, S, N;
+   cin &gt;&gt; x;
+   P = 1;</p> <p>  S = 0;
+   N = 0;
+   while (x &gt; 0) {
+     N = N + 1;</p> <p>    S = S + (x % 3)
+     P = P * (x % 3)
+     x = x / 3;
+   }</p> <p>  S = S + N;</p> <p>  P = P + N;
+   cout &lt;&lt; S &lt;&lt; endl &lt;&lt; P &lt;&lt; endl;
+   return 0;
+}</p> </td> <td> <p>x = int(input())P = 1S = 0</p> <p>N = 0while x &gt; 0:  N = N + 1</p> <p>  S = S + (x % 3)</p> <p>  P = P * (x % 3)  x = x // 3S = S + N</p> <p>P = P + N</p> <p>print(S)print(P)</p> </td> </tr> <tr> <td> <p><b>Алгоритмический язык</b><b></b></p> </td> <td> <p><b>Паскаль</b><b></b></p> </td> </tr> <tr> <td> <p><u>алг</u><u>нач</u> <u>цел</u> x, P, S, N  <u>ввод</u> x  P := 1  S := 0</p> <p>  N := 0  <u>нц</u> <u>пока</u> x &gt; 0    N := N + 1</p> <p>    S := S + mod(x, 3)</p> <p>    P := P * mod(x, 3)    x := div(x, 3)  <u>кц</u></p> <p>  S := S + N</p> <p>  P := P + N  <u>вывод</u> S, <u>нс</u>, P<u>кон</u></p> </td> <td> <p>var x, P, S, N: integer;begin  readln(x);  P := 1;  S := 0;</p> <p>  N := 0;  while x &gt; 0 do  begin    N := N + 1;</p> <p>    S := S + (x mod 3);</p> <p>    P := P * (x mod 3);    x := x div 3  end;</p> <p>  S := S + N;</p> <p>  P := P + N;  writeln(S);  writeln(P)end.</p> </td> </tr> </table>

@@ -1,0 +1,35 @@
+---
+id: "C99C04"
+answer_type: short_answer
+kes:
+  - "3.2"
+  - "3.6"
+hint: ""
+---
+
+На обработку поступает последовательность из четырёх неотрицательных целых чисел (некоторые числа могут быть одинаковыми). Нужно написать программу, которая выводит на экран количество чётных чисел
+в исходной последовательности и максимальное чётное число. Если чётных чисел нет, требуется на экран вывести «NO». Известно, что вводимые числа не превышают 1000. Программист написал программу неправильно. Ниже написанная им программа для Вашего удобства приведена на пяти языках программирования.
+
+
+<table> <tr> <td> <p><b>Бейсик</b></p> </td> <td> <p><b>Python</b></p> </td> </tr> <tr> <td> <p>CONST n = 4</p> <p>count = 0</p> <p>maximum = 1000</p> <p>FOR I = 1 TO n</p> <p>  INPUT x</p> <p>  IF x mod 2 = 0 THEN</p> <p>    count = count + 1</p> <p>    IF x &gt; maximum THEN</p> <p>      maximum = I</p> <p>    END IF</p> <p>  END IF</p> <p>NEXT I</p> <p>IF count &gt; 0 THEN</p> <p>  PRINT count</p> <p>  PRINT maximum</p> <p>ELSE</p> <p>  PRINT "NO"</p> <p>END IF</p> </td> <td> <p>n = 4</p> <p>count = 0</p> <p>maximum = 1000</p> <p>for i in range(1, n+1):</p> <p>    x = int(input())</p> <p>    if x % 2 == 0:</p> <p>        count += 1</p> <p>        if x &gt; maximum:</p> <p>            maximum = i</p> <p>if count &gt; 0:</p> <p>    print(count)</p> <p>    print(maximum)</p> <p>else:</p> <p>    print("NO")</p> </td> </tr> <tr> <td> <p><b>Алгоритмический язык</b></p> </td> <td> <p><b>Паскаль</b></p> </td> </tr> <tr> <td> <p><u>алг</u></p> <p><u>нач</u></p> <p> <u>цел</u> n = 4</p> <p> <u>цел</u> i, x</p> <p> <u>цел</u> maximum, count</p> <p>  count := 0</p> <p>  maximum := 1000</p> <p> <u>нц</u> <u>для</u> i <u>от</u> 1 <u>до</u> n</p> <p> <u>ввод</u> x</p> <p> <u>если</u> mod(x, 2) = 0 <u>то</u></p> <p>      count := count + 1</p> <p> <u>если</u> x &gt; maximum <u>то</u></p> <p>        maximum := i</p> <p> <u>все</u></p> <p> <u>все</u></p> <p> <u>кц</u></p> <p> <u>если</u> count &gt; 0 <u>то</u></p> <p> <u>вывод</u> count, <u>нс</u></p> <p> <u>вывод</u> maximum</p> <p> <u>иначе</u></p> <p> <u>вывод</u> "NO"</p> <p> <u>все</u></p> <p><u>кон</u></p> </td> <td> <p>const n = 4;</p> <p>var i, x: integer;</p> <p>var maximum, count: integer;</p> <p>begin</p> <p>  count := 0;</p> <p>  maximum := 1000;</p> <p>  for i := 1 to n do </p> <p>  begin</p> <p>    read(x);</p> <p>    if x mod 2 = 0 then</p> <p>    begin</p> <p>      count := count + 1;</p> <p>      if x &gt; maximum then</p> <p>        maximum := i</p> <p>    end</p> <p>  end;</p> <p>  if count &gt; 0 then</p> <p>  begin</p> <p>    writeln(count);</p> <p>    writeln(maximum)</p> <p>  end</p> <p>  else</p> <p>    writeln('NO')</p> <p>end.</p> </td> </tr> <tr> <td colspan="2"> <p><b>С++</b></p> </td> </tr> <tr> <td colspan="2"> <p>#include &lt;iostream&gt;</p> <p>using namespace std;</p> <p>int main() {</p> <p>  const int n = 4;</p> <p>  int x, maximum, count;</p> <p>  count = 0;</p> <p>  maximum = 1000;</p> <p>  for (int i = 1; i &lt;= n; i++) {</p> <p>    cin &gt;&gt; x;</p> <p>    if (x % 2 == 0) {</p> <p>      count++;</p> <p>      if (x &gt; maximum)</p> <p>        maximum = i;</p> <p>    }</p> <p>  }</p> <p>  if (count &gt; 0) {</p> <p>    cout &lt;&lt; count &lt;&lt; endl;</p> <p>    cout &lt;&lt; maximum &lt;&lt; endl;</p> <p>  }</p> <p>  else</p> <p>    cout &lt;&lt; "NO" &lt;&lt; endl;</p> <p>  return 0;</p> <p>}</p> </td> </tr> </table>
+Последовательно выполните следующее.
+
+1. Напишите, что выведет эта программа при вводе последовательности:
+
+2 15 44 15.
+
+2. Приведите пример такой последовательности, содержащей хотя бы одно чётное число, что при её вводе приведённая программа, несмотря на ошибки, выведет правильный ответ.
+
+3. Найдите допущенные программистом ошибки и исправьте их. Исправление ошибки должно затрагивать только строку, в которой находится ошибка. Для каждой ошибки:
+
+1. выпишите строку, в которой сделана ошибка;
+
+2. укажите, как исправить ошибку, т.е. приведите правильный вариант строки.
+
+Известно, что в тексте программы нужно исправить не более двух строк так, чтобы она стала работать правильно.
+
+Достаточно указать ошибки и способ их исправления для одного языка программирования.
+
+Обратите внимание на то, что требуется найти ошибки в имеющейся программе, а не написать свою, возможно, использующую другой алгоритм решения.
+
+*Примечание*. 0 делится на любое натуральное число.

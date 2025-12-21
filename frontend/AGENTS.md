@@ -1,18 +1,21 @@
 ## Контент задач (ручные правки)
 
-В репозитории есть два источника текста задачи:
+Единый каталог MDX с задачами — `frontend/content/tasks`.
+Он генерируется из базы и может правиться вручную/через dev‑редактор.
+
+В репозитории есть два уровня данных:
 
 1) **База** — `tasks_clean.jsonl` (генерируется скриптами, руками не правим).
-2) **Оверрайды** — отдельные файлы `frontend/content/tasks/<INTERNAL_ID>.mdx` (правим руками/через dev‑редактор).
+2) **MDX‑задачи** — файлы `frontend/content/tasks/<INTERNAL_ID>.mdx` (правим руками/через dev‑редактор).
 
-При наличии `frontend/content/tasks/<INTERNAL_ID>.mdx` именно он считается «источником правды» для полей, которые в нём указаны.
-Если оверрайда нет — всё работает как сейчас (рендерится HTML из `question_html_clean`).
+При наличии `frontend/content/tasks/<INTERNAL_ID>.mdx` именно он считается «источником правды» для полей,
+которые в нём указаны. Если MDX отсутствует — используется `question_html_clean` из базы.
 
 ### Нейминг и поиск
 
-- Ключ для оверрайда — `internal_id` задачи.
+- Ключ для MDX — `internal_id` задачи.
 - Для поиска/маппинга `internal_id` нормализуем к `UPPERCASE`.
-- Файлы оверрайдов называем `frontend/content/tasks/<INTERNAL_ID_UPPER>.mdx`.
+- Файлы MDX называем `frontend/content/tasks/<INTERNAL_ID_UPPER>.mdx`.
 
 ### Формат `*.mdx`
 
@@ -57,7 +60,11 @@
 
 ## Генерация `*.mdx` из базы
 
-Для старта правок можно сгенерировать заготовку оверрайда из `tasks_clean.jsonl`:
+Полная генерация каталога MDX выполняется через пайплайн:
+
+- `uv run python pipeline.py`
+
+Также можно сгенерировать один файл из `tasks_clean.jsonl`:
 
 - `uv run python generate_task_mdx.py --internal-id 09DBe5`
 

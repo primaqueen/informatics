@@ -1,0 +1,15 @@
+---
+id: "B6A860"
+answer_type: short_answer
+kes:
+  - "3.2"
+  - "3.3"
+  - "3.4"
+  - "3.5"
+hint: ""
+---
+
+Определите, при каком наибольшем введённом значении переменной ***s*** программа выведет число 64. Для Вашего удобства программа представлена на четырёх языках программирования.
+
+
+<table> <tr> <td> <p><b>Паскаль </b></p> </td> <td> <p><b>Python</b></p> </td> <td> <p><b>Алгоритмический язык</b></p> </td> </tr> <tr> <td> <p>var s, n: integer;</p> <p>begin</p> <p>  readln(s);</p> <p>  n := 1;</p> <p>  while s &lt; 47 do</p> <p>  begin</p> <p>    s := s + 4;</p> <p>    n := n * 2</p> <p>  end;</p> <p>  writeln(n)</p> <p>end.</p> </td> <td> <p>s = int(input())</p> <p>n = 1</p> <p>while s &lt; 47:</p> <p>    s = s + 4</p> <p>    n = n * 2</p> <p>print(n)</p> </td> <td> <p><u>алг</u></p> <p><u>нач</u></p> <p> <u>цел</u> n, s</p> <p> <u>ввод</u> s</p> <p>  n := 1</p> <p> <u>нц</u> <u>пока</u> s &lt; 47</p> <p>    s := s + 4</p> <p>    n := n * 2</p> <p> <u>кц</u></p> <p> <u>вывод</u> n</p> <p><u>кон</u></p> </td> </tr> <tr> <td colspan="3"> <p><b>С++</b></p> </td> </tr> <tr> <td colspan="3"> <p>#include &lt;iostream&gt; </p> <p>using namespace std;</p> <p>int main()</p> <p>{  int s, n;</p> <p>   cin &gt;&gt; s;</p> <p>   n = 1;</p> <p>   while (s &lt; 47) { s = s + 4; n = n * 2; }</p> <p>   cout &lt;&lt; n &lt;&lt; endl;</p> <p>   return 0;</p> <p>}</p> </td> </tr> </table>

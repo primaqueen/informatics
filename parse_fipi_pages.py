@@ -105,6 +105,12 @@ class AssetMapping:
     original_name: str
 
 
+def url_extension(url: str) -> str:
+    """Возвращает расширение файла из URL/пути без учёта query/fragment."""
+    parsed = urlsplit(url.strip())
+    return Path(parsed.path).suffix.lower()
+
+
 def attr_to_str(value: str | list[str] | None) -> str:
     if value is None:
         return ""
@@ -519,6 +525,46 @@ def load_html_files(pages_dir: str) -> list[tuple[int, str]]:
     return result
 
 
+def load_internal_id_to_task_number(path: Path) -> dict[str, int | None]:
+    raw = json.loads(path.read_text(encoding="utf-8"))
+    if not isinstance(raw, dict):
+        raise ValueError(f"Ожидался dict в {path}, получено: {type(raw).__name__}")
+    result: dict[str, int | None] = {}
+    for key, value in raw.items():
+        if not isinstance(key, str):
+            continue
+        if value is None:
+            result[key] = None
+            continue
+        if isinstance(value, int):
+            result[key] = value
+            continue
+        # На всякий случай — поддержка строковых чисел
+        if isinstance(value, str) and value.strip().isdigit():
+            result[key] = int(value.strip())
+    return result
+
+
+def drop_images_for_internal_ids(
+    tasks: list[TaskDict], internal_ids: set[str], drop_exts: set[str]
+) -> int:
+    removed = 0
+    for task in tasks:
+        iid = str(task.get("internal_id", "")).strip().lower()
+        if iid not in internal_ids:
+            continue
+        images = task.get("images", [])
+        kept: list[dict[str, str]] = []
+        for img in images:
+            src = str(img.get("src", ""))
+            if url_extension(src) in drop_exts:
+                removed += 1
+                continue
+            kept.append({"src": src, "alt": str(img.get("alt", ""))})
+        task["images"] = kept
+    return removed
+
+
 def main() -> None:
     import argparse
 
@@ -567,6 +613,28 @@ def main() -> None:
         action="store_true",
         help="Не скачивать файлы, только переписать пути и карту",
     )
+    parser.add_argument(
+        "--internal-id-to-task-number",
+        type=Path,
+        default=Path("internal_id_to_task_number.json"),
+        help="JSON со связкой internal_id -> номер задания (используется для фильтрации)",
+    )
+    parser.add_argument(
+        "--drop-images-for-task-number",
+        type=int,
+        action="append",
+        default=[],
+        help=(
+            "Для указанных номеров заданий удалить картинки с заданными расширениями "
+            "(можно повторять)"
+        ),
+    )
+    parser.add_argument(
+        "--drop-image-ext",
+        action="append",
+        default=[".png", ".gif"],
+        help="Расширения картинок для удаления (можно повторять), по умолчанию: .png и .gif",
+    )
     args = parser.parse_args()
 
     all_tasks: list[TaskDict] = []
@@ -578,6 +646,20 @@ def main() -> None:
     if not all_tasks:
         print("Не найдено задач, ничего не делаю.")
         return
+
+    if args.drop_images_for_task_number:
+        mapping = load_internal_id_to_task_number(args.internal_id_to_task_number)
+        wanted = set(args.drop_images_for_task_number)
+        internal_ids = {iid.lower() for iid, num in mapping.items() if num in wanted}
+        drop_exts = {str(ext).lower() for ext in args.drop_image_ext if str(ext).startswith(".")}
+        removed = drop_images_for_internal_ids(all_tasks, internal_ids, drop_exts)
+        print(
+            "Фильтрация картинок:",
+            f"номера={sorted(wanted)}",
+            f"internal_id={len(internal_ids)}",
+            f"расширения={sorted(drop_exts)}",
+            f"удалено_из_tasks={removed}",
+        )
 
     candidates = build_asset_candidates(all_tasks)
     mapping_by_key, entries = build_asset_mapping(candidates, args.assets_dir)

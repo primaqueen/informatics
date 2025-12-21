@@ -1,0 +1,15 @@
+---
+id: "E508E8"
+answer_type: short_answer
+kes:
+  - "3.7"
+  - "3.16"
+  - "3.17"
+hint: ""
+---
+
+Ниже на пяти языках программирования записан рекурсивный алгоритм F.
+
+
+<table> <tr> <td> <p><b>Бейсик</b></p> </td> <td> <p><b>Python</b></p> </td> </tr> <tr> <td> <p>SUB F(n)</p> <p>  IF n &gt; 0 THEN </p> <p>     PRINT n,</p> <p>     F(n - 3)</p> <p>     F(n \ 2)</p> <p>   END IF</p> <p>END SUB</p> </td> <td> <p>def F(n):</p> <p>    if n &gt; 0:</p> <p>        print(n)</p> <p>        F(n - 3)</p> <p>        F(n // 2)</p> </td> </tr> <tr> <td> <p><b>Алгоритмический язык</b></p> </td> <td> <p><b>Паскаль</b></p> </td> </tr> <tr> <td> <p><u>алг</u> F(<u>цел </u>n)</p> <p><u>нач</u></p> <p><u>   если </u>n &gt; 0 <u>то</u></p> <p><u>     вывод </u>n</p> <p>     F(n - 3)</p> <p>     F(div(n, 2))</p> <p><u>   все</u></p> <p><u>кон</u></p> <p></p> </td> <td> <p>procedure F(n: integer);</p> <p>begin</p> <p>  if n &gt; 0 then</p> <p>  begin</p> <p>    write(n);</p> <p>    F(n - 3);</p> <p>    F(n div 2)</p> <p>  end  </p> <p>end;</p> </td> </tr> <tr> <td colspan="2"> <p><b>С</b><b>++</b></p> </td> </tr> <tr> <td colspan="2"> <p>void F(int n){</p> <p>    if (n &gt; 0){</p> <p>        std::cout &lt;&lt; n;</p> <p>        F(n - 3);</p> <p>        F(n / 2);</p> <p>    }</p> <p>}</p> </td> </tr> </table>
+Запишите подряд без пробелов и разделителей все числа, которые будут выведены на экран при выполнении вызова F(7). Числа должны быть записаны в том же порядке, в котором они выводятся на экран.

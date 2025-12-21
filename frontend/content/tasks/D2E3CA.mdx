@@ -1,0 +1,13 @@
+---
+id: "D2E3CA"
+answer_type: short_answer
+kes:
+  - "3.2"
+  - "3.6"
+hint: ""
+---
+
+Определите, при каком **наименьшем** введённом значении переменной *s* программа выведет число 8. Для Вашего удобства программа представлена на четырёх языках программирования.
+
+
+<table> <tr> <td> <p><b>Паскаль</b></p> </td> <td> <p><b>Python</b></p> </td> </tr> <tr> <td> <p>var s, n: integer;</p> <p>begin</p> <p>  readln(s);</p> <p>  s := (s – 21) div 10;</p> <p>  n := 1;</p> <p>  while s &gt;= 0 do</p> <p>  begin</p> <p>    n := n * 2;</p> <p>    s := s - n;</p> <p>  end;</p> <p>  writeln(n)</p> <p>end.</p> </td> <td> <p>s = int(input())</p> <p>s = (s – 21) // 10</p> <p>n = 1</p> <p>while s &gt;= 0:</p> <p>  n = n * 2</p> <p>  s = s - n</p> <p>print(n)</p> </td> </tr> <tr> <td> <p><b>Алгоритмический язык</b></p> </td> <td> <p><b>С++</b></p> </td> </tr> <tr> <td> <p><u>алг</u></p> <p><u>нач</u></p> <p> <u>цел</u> n, s</p> <p> <u>ввод</u> s</p> <p>  s := div((s – 21), 10)</p> <p>  n := 1</p> <p> <u>нц</u> <u>пока</u> s &gt;= 0</p> <p>    n := n * 2</p> <p>    s := s - n</p> <p> <u>кц</u></p> <p> <u>вывод</u> n</p> <p><u>кон</u></p> </td> <td> <p>#include &lt;iostream&gt;</p> <p>using namespace std;</p> <p>int main()</p> <p>{ </p> <p>  int s, n;</p> <p>  cin &gt;&gt; s;</p> <p>  s = (s – 21) / 10;</p> <p>  n = 1;</p> <p>  while (s &gt;= 0) </p> <p>    {n = n * 2; s = s - n;}</p> <p>  cout &lt;&lt; n &lt;&lt; endl;</p> <p>  return 0;</p> <p>}</p> </td> </tr> </table>

@@ -1,0 +1,18 @@
+---
+id: "CB623A"
+answer_type: short_answer
+kes:
+  - "3.2"
+  - "3.6"
+hint: ""
+---
+
+Напишите в ответе число, которое будет выведено в результате выполнения следующего алгоритма. Для Вашего удобства алгоритм представлен на пяти языках программирования.
+
+
+<table> <tr> <td> <p><b>Бейсик</b></p> </td> </tr> <tr> <td> <p>DIM A, B, T, M, R AS LONG</p> <p>A = -20: B = 20
+M = A: R = F(A)</p> <p>FOR T = A TO B</p> <p>  IF F(T) &lt;= R THEN</p> <p>    M = T</p> <p>    R = F(T)</p> <p>  END IF</p> <p>NEXT T</p> <p>PRINT M + R</p> <p>FUNCTION F(x)</p> <p>  F = 2 * (x * x - 16) * (x * x - 16) + 41</p> <p>END FUNCTION</p> </td> </tr> </table>
+
+<table> <tr> <td> <p><b>Python</b></p> </td> </tr> <tr> <td> <p>def F(x):</p> <p>  return 2 * (x * x - 16) * (x * x - 16) + 41</p> <p>a = -20; b = 20</p> <p>M = a; R = F(a)</p> <p>for t in range(a, b + 1):</p> <p>  if (F(t) &lt;= R):</p> <p>    M = t; R = F(t)</p> <p>print(M + R)</p> </td> </tr> <tr> <td> <p><b>Алгоритмический язык</b></p> </td> </tr> <tr> <td> <p><u>алг</u></p> <p><u>нач</u></p> <p><u>цел</u> a, b, t, M, R</p> <p>  a := -20; b := 20</p> <p>  M := a; R := F(a)</p> <p> <u>нц</u> <u>для</u> t <u>от</u> a <u>до</u> b</p> <p><u>если</u> F(t) &lt;=  R<u>то</u></p> <p>        M := t; R := F(t)</p> <p><u>все</u></p> <p><u>кц</u></p> <p> <u>вывод</u>M + R</p> <p><u>кон</u></p> <p><u>алг</u> <u>цел</u> F(<u>цел</u> x)</p> <p><u>нач</u></p> <p><u>знач</u> := 2 * (x * x - 16) * (x * x - 16) + 41</p> <p><u>кон</u></p> </td> </tr> <tr> <td> <p><b>Паскаль</b></p> </td> </tr> <tr> <td> <p>var a, b, t, M, R: longint;</p> <p>function F(x: longint): longint;</p> <p>  begin</p> <p>    F := 2 * (x * x - 16) * (x * x - 16) + 41;</p> <p>  end;</p> <p>begin</p> <p>  a := -20; b := 20;</p> <p>  M := a; R := F(a);</p> <p>  for t := a to b do begin</p> <p>    if (F(t) &lt;= R) then begin</p> <p>      M := t;</p> <p>      R := F(t)</p> <p>    end</p> <p>  end;</p> <p>  write(M + R)</p> <p>end.</p> </td> </tr> </table>
+
+<table> <tr> <td> <p><b>С++</b></p> </td> </tr> <tr> <td> <p>#include &lt;iostream&gt;</p> <p>using namespace std;</p> <p>long F(long x)</p> <p>{</p> <p>  return 2 * (x * x - 16) * (x * x - 16) + 41;</p> <p>}</p> <p>int main()</p> <p>{</p> <p>  long a, b, t, M, R;</p> <p>  a = -20; b = 20;</p> <p>  M = a; R = F(a);</p> <p>  for (t = a; t &lt;= b; t++) {</p> <p>    if (F(t) &lt;= R) {</p> <p>      M = t; R = F(t);</p> <p>    }</p> <p>  }</p> <p>  cout &lt;&lt; M + R &lt;&lt; endl;</p> <p>  return 0;</p> <p>}</p> </td> </tr> </table>

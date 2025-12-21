@@ -1,0 +1,39 @@
+{
+  "stages": [
+    {
+      "id": "parse",
+      "status": "ok",
+      "duration": 8.835195064544678
+    },
+    {
+      "id": "transform",
+      "status": "ok",
+      "duration": 3.78865909576416
+    },
+    {
+      "id": "render_mdx",
+      "status": "ok",
+      "duration": 2.425264835357666,
+      "stats": {
+        "total": 2313,
+        "written": 2313,
+        "skipped": 0
+      }
+    },
+    {
+      "id": "publish",
+      "status": "ok",
+      "duration": 0.1684129238128662,
+      "stats": {
+        "files": 1057,
+        "dirs": 0
+      }
+    },
+    {
+      "id": "verify_mdx",
+      "status": "ok",
+      "duration": 0.10183906555175781
+    }
+  ],
+  "config": "pipeline.yml"
+}

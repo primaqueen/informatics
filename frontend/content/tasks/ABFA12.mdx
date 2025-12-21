@@ -1,0 +1,13 @@
+---
+id: "ABFA12"
+answer_type: short_answer
+kes:
+  - "3.2"
+  - "3.6"
+hint: ""
+---
+
+Определите число, которое будет напечатано в результате выполнения следующего алгоритма. Для Вашего удобства алгоритм представлен на пяти языках программирования.
+
+
+<table> <tr> <td> <p><b>Бейсик</b></p> </td> <td> <p>DIM A, B, N, t AS INTEGER</p> <p>A = -100: B = 100</p> <p>N = 0</p> <p>FOR t = A TO B</p> <p>  IF F(t) &lt;= 0 THEN</p> <p>    N = N + 1</p> <p>  END IF</p> <p>NEXT t</p> <p>PRINT N</p> <p>FUNCTION F(x)</p> <p>    F = 2*(x - 10)*(x + 45)</p> <p>END FUNCTION</p> </td> </tr> <tr> <td> <p><b>Python</b></p> </td> <td> <p>def F(x):</p> <p>  return 2*(x - 10)*(x + 45)</p> <p>a = -100</p> <p>b = 100</p> <p>n = 0</p> <p>for t in range(a, b + 1):</p> <p>  if F(t) &lt;= 0:</p> <p>    n = n + 1</p> <p>print(n)</p> </td> </tr> <tr> <td> <p><b>Алгоритмический язык</b></p> </td> <td> <p><u>алг</u></p> <p><u>нач</u></p> <p><u>цел</u> a, b, N, t</p> <p>  a := -100; b := 100</p> <p>  N := 0</p> <p> <u>нц</u> <u>для</u> t <u>от</u> a <u>до</u> b</p> <p><u>если </u>F(t) &lt;= 0<u>то</u></p> <p>        N := N + 1</p> <p><u>все</u></p> <p> <u>кц</u></p> <p> <u>вывод</u>N</p> <p><u>кон</u></p> <p><u>алг</u> <u>цел</u> F(<u>цел</u> x)</p> <p><u>нач</u></p> <p><u>знач</u> := 2*(x - 10)*(x + 45)</p> <p><u>кон</u></p> </td> </tr> <tr> <td> <p><b>Паскаль</b></p> </td> <td> <p>var a, b, N, t: integer;</p> <p>function F(x: integer): integer;</p> <p>begin</p> <p>  F := 2*(x - 10)*(x + 45)</p> <p>end;</p> <p>begin</p> <p>  a := -100; b := 100;</p> <p>  N := 0;</p> <p>  for t := a to b do begin</p> <p>    if (F(t) &lt;= 0) then</p> <p>      N := N + 1</p> <p>  end;</p> <p>  write(N)</p> <p>end.</p> </td> </tr> <tr> <td> <p><b>C++</b></p> </td> <td> <p>#include &lt;iostream&gt;</p> <p>using namespace std;</p> <p>int F(int x) {</p> <p>  return 2*(x - 10)*(x + 45);</p> <p>}</p> <p>int main() {</p> <p>  int a, b, N, t;</p> <p>  a = -100; b = 100;</p> <p>  N = 0;</p> <p>  for (t = a; t &lt;= b; t++) {</p> <p>    if (F(t) &lt;= 0) {</p> <p>      N++;</p> <p>    }</p> <p>  }</p> <p>  cout &lt;&lt; N;</p> <p>  return 0;</p> <p>}</p> </td> </tr> </table>

@@ -1,0 +1,12 @@
+---
+id: "3F3FD3"
+answer_type: short_answer
+kes:
+  - "3.1"
+hint: ""
+---
+
+Ниже на четырёх языках программирования записан алгоритм. Получив на вход число *x*, этот алгоритм печатает два числа: *a* и *b*. Укажите **наименьшее** из таких чисел *x*, при вводе которых алгоритм печатает сначала 11, а потом 6.
+
+
+<table> <tr> <td> <p><b>С++</b></p> </td> <td> <p><b>Python</b></p> </td> <td> <p><b>Алгоритмический язык</b></p> </td> <td> <p><b>Паскаль</b></p> </td> </tr> <tr> <td> <p>#include &lt;iostream&gt;</p> <p>using namespace std;</p> <p>int main()</p> <p>{</p> <p>  int x, a, b, c;</p> <p>  cin &gt;&gt; x;</p> <p>  a = 0; b = 0;</p> <p>  while (x &gt; 0) {</p> <p>    c = x % 10;</p> <p>    a = a + c;</p> <p>    if (c &gt; b) </p> <p>      b = c;</p> <p>    x = x / 10;</p> <p>  }</p> <p>  cout &lt;&lt; a &lt;&lt; endl &lt;&lt; b &lt;&lt; endl;</p> <p>  return 0;</p> <p>}</p> </td> <td> <p>x = int(input())</p> <p>a = 0</p> <p>b = 0</p> <p>while x &gt; 0:</p> <p>    c = x % 10</p> <p>    a = a + c</p> <p>    if c &gt; b:</p> <p>        b = c</p> <p>    x = x // 10</p> <p>print(a)</p> <p>print(b)</p> </td> <td> <p><u>алг </u></p> <p><u>нач</u></p> <p> <u>цел</u> x, a, b, c</p> <p> <u>ввод</u> x</p> <p>     a := 0; b := 0</p> <p> <u>нц</u><u>пока</u> x &gt; 0</p> <p>       c := mod(x,10)</p> <p>       a := a + c</p> <p> <u>если</u> c &gt; b </p> <p> <u>то</u> b := c </p> <p> <u>все</u></p> <p>       x := div(x,10)</p> <p> <u>кц</u></p> <p> <u>вывод</u> a, <u>нс</u>, b</p> <p><u>кон</u></p> </td> <td> <p>var x, a, b, c: integer;</p> <p>begin</p> <p>  readln(x);</p> <p>  a := 0; b := 0;</p> <p>  while x &gt; 0 do</p> <p>  begin</p> <p>     c := x mod 10;</p> <p>     a := a + c;</p> <p>     if c &gt; b then b := c;</p> <p>     x := x div 10</p> <p>  end;</p> <p>  writeln(a); writeln(b)</p> <p>end.</p> </td> </tr> </table>

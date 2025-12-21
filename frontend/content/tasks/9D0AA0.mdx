@@ -1,0 +1,30 @@
+---
+id: "9D0AA0"
+answer_type: short_answer
+kes:
+  - "3.2"
+  - "3.6"
+hint: ""
+---
+
+На обработку поступает натуральное число, не превышающее $10^{9}$. Нужно написать программу, которая выводит на экран максимальную чётную цифру этого числа. Если в числе нет чётных цифр, требуется на экран вывести «NO». Программист написал программу неправильно. Ниже эта программа для Вашего удобства приведена на пяти языках программирования.
+
+
+<table> <tr> <td> <p><b>Бейсик</b></p> </td> <td> <p><b>Python</b></p> </td> </tr> <tr> <td> <p>DIM N, DIGIT, MAXDIGIT AS LONG</p> <p>INPUT N</p> <p>MAXDIGIT = N MOD 10</p> <p>WHILE N &gt; 0</p> <p>  DIGIT = N MOD 10</p> <p>  IF DIGIT MOD 2 = 0 THEN</p> <p>    IF DIGIT &gt; MAXDIGIT THEN</p> <p>      DIGIT = MAXDIGIT</p> <p>    END IF</p> <p>  END IF</p> <p>  N = N \ 10</p> <p>WEND</p> <p>IF MAXDIGIT &gt;= 0 THEN</p> <p>  PRINT MAXDIGIT </p> <p>ELSE</p> <p>  PRINT "NO"</p> <p>END IF</p> </td> <td> <p>N = int(input())</p> <p>maxDigit = N % 10</p> <p>while N &gt; 0:</p> <p>  digit = N % 10</p> <p>  if digit % 2 == 0:</p> <p>    if digit &gt; maxDigit:</p> <p>      digit = maxDigit</p> <p>  N = N // 10</p> <p>if maxDigit &gt;= 0:</p> <p>  print(maxDigit)</p> <p>else:</p> <p>  print("NO")</p> </td> </tr> <tr> <td> <p><b>Алгоритмический</b><b> язык</b></p> </td> <td> <p><b>Паскаль</b></p> </td> </tr> <tr> <td> <p><u>алг</u> </p> <p><u>нач</u></p> <p> <u>цел</u> N, digit, maxDigit</p> <p> <u>ввод</u> N</p> <p>  maxDigit := mod(N,10)</p> <p> <u>нц</u> <u>пока</u> N &gt; 0</p> <p>    digit := mod(N,10)</p> <p> <u>если</u> mod(digit, 2) = 0 <u>то</u></p> <p> <u>если</u> digit &gt; maxDigit <u>то</u></p> <p>        digit := maxDigit</p> <p> <u>все</u></p> <p> <u>все</u></p> <p>    N := div(N,10)</p> <p> <u>кц</u></p> <p> <u>если</u> maxDigit &gt;= 0 <u>то</u></p> <p> <u>вывод</u> maxDigit </p> <p> <u>иначе</u></p> <p> <u>вывод</u> "NO"</p> <p> <u>все</u></p> <p><u>кон</u></p> </td> <td> <p>var N,digit,maxDigit: longint;</p> <p>begin</p> <p>  readln(N);</p> <p>  maxDigit := N mod 10;</p> <p>  while N &gt; 0 do </p> <p>  begin</p> <p>    digit := N mod 10;</p> <p>    if digit mod 2 = 0 then</p> <p>      if digit &gt; maxDigit then</p> <p>        digit := maxDigit;</p> <p>    N := N div 10;</p> <p>  end;</p> <p>  if maxDigit &gt;= 0 then</p> <p>    writeln(maxDigit)</p> <p>  else</p> <p>    writeln('NO')</p> <p>end.</p> </td> </tr> <tr> <td colspan="2"> <p><b>С++</b></p> </td> </tr> <tr> <td colspan="2"> <p>#include &lt;iostream&gt;</p> <p>using namespace std;</p> <p>int main() {</p> <p>  int N, digit, maxDigit;</p> <p>  cin &gt;&gt; N;</p> <p>  maxDigit = N % 10;</p> <p>  while (N &gt; 0) {</p> <p>    digit = N % 10;</p> <p>    if (digit % 2 == 0)</p> <p>      if (digit &gt; maxDigit)</p> <p>        digit = maxDigit;</p> <p>    N = N / 10;</p> <p>  }</p> <p>  if (maxDigit &gt;= 0)</p> <p>    cout &lt;&lt; maxDigit &lt;&lt; endl;</p> <p>  else</p> <p>    cout &lt;&lt; "NO" &lt;&lt; endl;</p> <p>  return 0;</p> <p>}</p> </td> </tr> </table>
+Последовательно выполните следующее.
+
+1. Напишите, что выведет эта программа при вводе числа 243.
+
+2. Приведите пример такого трёхзначного числа, при вводе которого приведённая программа, несмотря на ошибки, выдаёт верный ответ.
+
+3. Найдите допущенные программистом ошибки и исправьте их. Исправление ошибки должно затрагивать только строку, в которой находится ошибка. Для каждой ошибки:
+
+1. выпишите строку, в которой сделана ошибка;
+
+2. укажите, как исправить ошибку, т.е. приведите правильный вариант строки.
+
+Известно, что в тексте программы можно исправить ровно две строки так, чтобы она стала работать правильно.
+
+Достаточно указать ошибки и способ их исправления для одного языка программирования.
+
+Обратите внимание на то, что требуется найти ошибки в имеющейся программе, а не написать свою, возможно, использующую другой алгоритм решения.

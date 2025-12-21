@@ -1,0 +1,13 @@
+---
+id: "16F2BB"
+answer_type: short_answer
+kes:
+  - "3.2"
+  - "3.6"
+hint: ""
+---
+
+При каком наименьшем значении входной переменной *k* программа выдаёт тот же ответ, что и при входном значении *k* = 10? Для Вашего удобства программа приведена на пяти языках программирования.
+
+
+<table> <tr> <td> <p><b>Бейсик</b></p> </td> <td> <p>DIM K, I AS LONG</p> <p>INPUT K</p> <p>I = 32</p> <p>WHILE I &gt; 0 AND F(I) &gt; K</p> <p>  I = I - 1</p> <p>WEND</p> <p>PRINT I</p> <p>FUNCTION F(N)</p> <p>  F = N * N - 45</p> <p>END FUNCTION</p> </td> </tr> <tr> <td> <p><b>Python</b></p> </td> <td> <p>def F(n):</p> <p>  return n * n - 45</p> <p>k = int(input())</p> <p>i = 32</p> <p>while i &gt; 0 and F(i) &gt; k:</p> <p>  i = i - 1</p> <p>print(i)</p> </td> </tr> <tr> <td> <p><b>Алгоритмический язык</b></p> </td> <td> <p><u>алг</u></p> <p><u>нач</u></p> <p> <u>цел</u> i, k</p> <p> <u>ввод</u> k</p> <p>  i := 32</p> <p> <u>нц</u> <u>пока</u> i &gt; 0 <u>и</u> f(i) &gt; k</p> <p>    i := i - 1</p> <p> <u>кц</u></p> <p> <u>вывод</u> i</p> <p><u>кон</u></p> <p><u>алг</u> <u>цел</u> f(<u>цел</u> n)</p> <p><u>нач</u></p> <p> <u>знач</u> := n * n - 45</p> <p><u>кон</u></p> </td> </tr> <tr> <td> <p><b>Паскаль</b></p> </td> <td> <p>var k, i : longint;</p> <p>function F(n: longint) : longint;</p> <p>begin</p> <p>  F := n * n - 45</p> <p>end;</p> <p>begin</p> <p>  readln(k);</p> <p>  i := 32;</p> <p>  while (i &gt; 0) and (F(i) &gt; k) do</p> <p>    i := i - 1;</p> <p>  writeln(i)</p> <p>end.</p> </td> </tr> <tr> <td> <p><b>C++</b></p> </td> <td> <p>#include &lt;iostream&gt;</p> <p>using namespace std;</p> <p>long F(long n) {</p> <p>  return n * n - 45;</p> <p>}</p> <p>int main() {</p> <p>  long k, i;</p> <p>  cin &gt;&gt; k;</p> <p>  i = 32;</p> <p>  while (i &gt; 0 &amp;&amp; F(i) &gt; k) {</p> <p>    i––;</p> <p>  }</p> <p>  cout &lt;&lt; i;</p> <p>  return 0;</p> <p>}</p> </td> </tr> </table>

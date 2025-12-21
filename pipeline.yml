@@ -1,0 +1,72 @@
+version: 1
+
+paths:
+  pages_dir: pages
+  tasks_jsonl: tasks.jsonl
+  tasks_clean_jsonl: tasks_clean.jsonl
+  assets_dir: assets
+  map_json: map.json
+  kes_output: reference/kes.json
+  mdx_dir: frontend/content/tasks
+  internal_id_map: internal_id_to_task_number.json
+  public_dir: frontend/public
+
+stages:
+  - id: parse
+    type: parse_pages
+    enabled: true
+    params:
+      pages_dir: pages_dir
+      output: tasks_jsonl
+      assets_dir: assets_dir
+      map_json: map_json
+      download: false
+      drop_images_for_task_number: [5]
+      drop_image_ext: [".png", ".gif"]
+      internal_id_map: internal_id_map
+
+  - id: transform
+    type: transform_tasks
+    enabled: true
+    params:
+      input: tasks_jsonl
+      output: tasks_clean_jsonl
+      kes_output: kes_output
+      drop_images_for_task_number: [5]
+      drop_image_ext: [".png", ".gif"]
+      internal_id_map: internal_id_map
+
+  - id: render_mdx
+    type: render_mdx
+    enabled: true
+    params:
+      input: tasks_clean_jsonl
+      output_dir: mdx_dir
+      task_number_map: internal_id_map
+      mode: all
+      overwrite: true
+
+  - id: publish
+    type: publish
+    enabled: true
+    params:
+      copy:
+        - from: tasks_clean_jsonl
+          to: frontend/public/tasks_clean.jsonl
+        - from: internal_id_map
+          to: frontend/public/internal_id_to_task_number.json
+        - from: map_json
+          to: frontend/public/map.json
+        - from: assets_dir
+          to: frontend/public/assets
+
+  - id: verify_mdx
+    type: verify_mdx
+    enabled: true
+    params:
+      input: tasks_clean_jsonl
+      mdx_dir: mdx_dir
+
+report:
+  output: build/report.json
+  include_applied_rules: true
