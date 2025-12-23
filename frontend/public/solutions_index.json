@@ -1,0 +1,24 @@
+{
+  "48F84F": [
+    {
+      "id": "solution_analytical_1",
+      "type": "analytical",
+      "body": "$2312312$\n",
+      "meta": {
+        "type": "analytical"
+      },
+      "file": "solution_analytical_1.mdx",
+      "num": 1
+    },
+    {
+      "id": "solution_analytical_2",
+      "type": "analytical",
+      "body": "вах\n",
+      "meta": {
+        "type": "analytical"
+      },
+      "file": "solution_analytical_2.mdx",
+      "num": 2
+    }
+  ]
+}

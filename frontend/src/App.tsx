@@ -63,11 +63,15 @@ const theme = createTheme({
 const PAGE_SIZE = 10;
 const TASK_NUMBER_ALL_VALUE = "all";
 const TASK_NUMBER_UNASSIGNED_VALUE = "no-number";
+const ANSWER_FILTER_ALL_VALUE = "all";
+const ANSWER_FILTER_EMPTY_VALUE = "empty";
 const QUERY_PARAM_SEARCH = "q";
 const QUERY_PARAM_TASK_NUMBER = "num";
+const QUERY_PARAM_ANSWER = "answer";
 
 function App() {
-  const { tasks, loading, error, applyOverride } = useTasks();
+  const { tasks, loading, error, applyOverride, applyAnswer, addSolution, updateSolution } =
+    useTasks();
   const [page, setPage] = useState(1);
   const [search, setSearch] = useState(() => {
     const params = new URLSearchParams(window.location.search);
@@ -79,6 +83,12 @@ function App() {
     if (raw === TASK_NUMBER_UNASSIGNED_VALUE) return TASK_NUMBER_UNASSIGNED_VALUE;
     if (raw && /^\d+$/.test(raw)) return raw;
     return TASK_NUMBER_ALL_VALUE;
+  });
+  const [answerFilter, setAnswerFilter] = useState<string>(() => {
+    const params = new URLSearchParams(window.location.search);
+    const raw = params.get(QUERY_PARAM_ANSWER);
+    if (raw === ANSWER_FILTER_EMPTY_VALUE) return ANSWER_FILTER_EMPTY_VALUE;
+    return ANSWER_FILTER_ALL_VALUE;
   });
   const [selectedKes, setSelectedKes] = useState<string[]>([]);
   const [searchOpen, setSearchOpen] = useState(false);
@@ -92,8 +102,9 @@ function App() {
     () =>
       Boolean(search.trim()) ||
       taskNumberFilter !== TASK_NUMBER_ALL_VALUE ||
-      selectedKes.length > 0,
-    [search, selectedKes.length, taskNumberFilter],
+      selectedKes.length > 0 ||
+      answerFilter !== ANSWER_FILTER_ALL_VALUE,
+    [answerFilter, search, selectedKes.length, taskNumberFilter],
   );
 
   useEffect(() => {
@@ -112,6 +123,12 @@ function App() {
       params.set(QUERY_PARAM_TASK_NUMBER, taskNumberFilter);
     }
 
+    if (answerFilter === ANSWER_FILTER_EMPTY_VALUE) {
+      params.set(QUERY_PARAM_ANSWER, ANSWER_FILTER_EMPTY_VALUE);
+    } else {
+      params.delete(QUERY_PARAM_ANSWER);
+    }
+
     const nextQuery = params.toString();
     const nextUrl = `${window.location.pathname}${nextQuery ? `?${nextQuery}` : ""}${
       window.location.hash
@@ -121,7 +138,7 @@ function App() {
     if (nextUrl !== currentUrl) {
       window.history.replaceState(null, "", nextUrl);
     }
-  }, [search, taskNumberFilter]);
+  }, [answerFilter, search, taskNumberFilter]);
 
   const kesCatalog = useMemo(() => {
     const byId = new Map<string, { text: string; section: string }>();
@@ -217,9 +234,14 @@ function App() {
           ? task.task_number == null
           : String(task.task_number) === taskNumberFilter);
 
-      return matchesSearch && matchesKes && matchesTaskNumber;
+      const answerText = typeof task.answer === "string" ? task.answer.trim() : "";
+      const matchesAnswer =
+        answerFilter === ANSWER_FILTER_ALL_VALUE ||
+        (answerFilter === ANSWER_FILTER_EMPTY_VALUE ? !answerText : true);
+
+      return matchesSearch && matchesKes && matchesTaskNumber && matchesAnswer;
     });
-  }, [search, tasks, selectedKes, taskNumberFilter]);
+  }, [answerFilter, search, tasks, selectedKes, taskNumberFilter]);
 
   const pageCount = useMemo(
     () => Math.max(1, Math.ceil(filteredTasks.length / PAGE_SIZE)),
@@ -252,11 +274,17 @@ function App() {
     setSearch("");
     setTaskNumberFilter(TASK_NUMBER_ALL_VALUE);
     setSelectedKes([]);
+    setAnswerFilter(ANSWER_FILTER_ALL_VALUE);
     setPage(1);
   };
 
   const handleTaskNumberChange = (event: SelectChangeEvent<string>) => {
     setTaskNumberFilter(event.target.value);
+    setPage(1);
+  };
+
+  const handleAnswerFilterChange = (event: SelectChangeEvent<string>) => {
+    setAnswerFilter(event.target.value);
     setPage(1);
   };
 
@@ -271,13 +299,16 @@ function App() {
       const selectedNumber = taskNumberOptions.find((option) => option.value === taskNumberFilter);
       if (selectedNumber) parts.push(`Номер: ${selectedNumber.display}`);
     }
+    if (answerFilter === ANSWER_FILTER_EMPTY_VALUE) {
+      parts.push("Без ответа");
+    }
     if (selectedKes.length) {
       const visible = selectedKes.slice(0, 3).join(", ");
       const more = selectedKes.length > 3 ? ` +${selectedKes.length - 3}` : "";
       parts.push(`КЭС: ${visible}${more}`);
     }
     return parts.join(" · ") || "Поиск по internal_id / qid / suffix";
-  }, [search, selectedKes, taskNumberFilter, taskNumberOptions]);
+  }, [answerFilter, search, selectedKes, taskNumberFilter, taskNumberOptions]);
 
   const toggleKes = (code: string) => {
     setSelectedKes((prev) => {
@@ -421,6 +452,17 @@ function App() {
               ))}
             </TextField>
 
+            <TextField
+              select
+              label="Ответы"
+              value={answerFilter}
+              onChange={handleAnswerFilterChange}
+              helperText="Показывать все задачи или только без ответа"
+            >
+              <MenuItem value={ANSWER_FILTER_ALL_VALUE}>Все ответы</MenuItem>
+              <MenuItem value={ANSWER_FILTER_EMPTY_VALUE}>Без ответа</MenuItem>
+            </TextField>
+
             <Stack direction="row" spacing={1} alignItems="center">
               <Typography variant="subtitle1" sx={{ flexGrow: 1 }}>
                 Фильтр по КЭС
@@ -539,6 +581,9 @@ function App() {
                   task={task}
                   onEdit={() => setEditingTaskId(task.internal_id)}
                   onKesClick={handleKesClick}
+                  onAnswerSaved={applyAnswer}
+                  onSolutionAdded={addSolution}
+                  onSolutionUpdated={updateSolution}
                 />
               ))
             ) : (

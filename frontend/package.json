@@ -6,6 +6,7 @@
   "scripts": {
     "sync-data": "node scripts/sync-data.mjs",
     "dev": "npm run sync-data && vite",
+    "dev:https": "npm run sync-data && VITE_HTTPS=1 VITE_HTTPS_CERT=ege.home+1.pem VITE_HTTPS_KEY=ege.home+1-key.pem vite --host 0.0.0.0",
     "build": "npm run sync-data && vite build",
     "preview": "vite preview",
     "lint": "eslint src --ext .ts,.tsx"

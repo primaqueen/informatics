@@ -17,7 +17,8 @@ import {
 import React, { Suspense, useEffect, useState } from "react";
 import type { Task, TaskSolution } from "../types";
 import { MarkdownRenderer } from "./MarkdownRenderer";
-import { SOLUTION_TYPE_LABELS, SOLUTION_TYPE_ORDER, SolutionType } from "../solutions";
+import { SOLUTION_TYPE_LABELS, SOLUTION_TYPE_ORDER } from "../solutions";
+import type { SolutionType } from "../solutions";
 
 const MonacoEditor = React.lazy(() => import("@monaco-editor/react"));
 
@@ -25,11 +26,21 @@ interface Props {
   open: boolean;
   task: Task | null;
   defaultType?: SolutionType | null;
+  solution?: TaskSolution | null;
   onClose: () => void;
   onSaved: (internalId: string, solution: TaskSolution) => void;
+  onUpdated?: (internalId: string, solution: TaskSolution) => void;
 }
 
-export function SolutionAddDialog({ open, task, defaultType, onClose, onSaved }: Props) {
+export function SolutionAddDialog({
+  open,
+  task,
+  defaultType,
+  solution,
+  onClose,
+  onSaved,
+  onUpdated,
+}: Props) {
   const [solutionType, setSolutionType] = useState<SolutionType>("analytical");
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
@@ -38,11 +49,17 @@ export function SolutionAddDialog({ open, task, defaultType, onClose, onSaved }:
 
   useEffect(() => {
     if (!open) return;
-    setSolutionType(defaultType ?? "analytical");
-    setTitle("");
-    setBody("");
+    if (solution) {
+      setSolutionType(solution.type);
+      setTitle(solution.title ?? "");
+      setBody(solution.body ?? "");
+    } else {
+      setSolutionType(defaultType ?? "analytical");
+      setTitle("");
+      setBody("");
+    }
     setError(null);
-  }, [open, defaultType]);
+  }, [open, defaultType, solution]);
 
   const handleSave = async () => {
     if (!task) return;
@@ -54,21 +71,24 @@ export function SolutionAddDialog({ open, task, defaultType, onClose, onSaved }:
     setSaving(true);
     setError(null);
     try {
-      const res = await fetch(`/__admin/solutions/${task.internal_id}`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            type: solutionType,
-            title: title.trim() ? title.trim() : undefined,
-            body,
-          }),
-        },
-      );
+      const res = await fetch(`/__admin/solutions/${task.internal_id}`, {
+        method: solution ? "PUT" : "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: solution?.id,
+          type: solutionType,
+          title: title.trim() ? title.trim() : undefined,
+          body,
+        }),
+      });
       if (!res.ok) throw new Error(`HTTP ${res.status} при сохранении решения`);
       const data = (await res.json()) as { solution?: TaskSolution };
       if (!data.solution) throw new Error("Сервер не вернул решение");
-      onSaved(task.internal_id, data.solution);
+      if (solution && onUpdated) {
+        onUpdated(task.internal_id, data.solution);
+      } else if (!solution) {
+        onSaved(task.internal_id, data.solution);
+      }
       onClose();
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
@@ -88,7 +108,7 @@ export function SolutionAddDialog({ open, task, defaultType, onClose, onSaved }:
       <DialogTitle>
         <Stack direction="row" spacing={1} alignItems="center">
           <Box sx={{ flexGrow: 1, minWidth: 0 }}>
-            <Typography fontWeight={700}>Новое решение</Typography>
+            <Typography fontWeight={700}>{solution ? "Редактирование решения" : "Новое решение"}</Typography>
             <Typography variant="body2" color="text.secondary" noWrap>
               {task ? `${task.internal_id} — № ${task.task_number ?? "без номера"}` : ""}
             </Typography>
@@ -107,6 +127,7 @@ export function SolutionAddDialog({ open, task, defaultType, onClose, onSaved }:
                 select
                 label="Тип решения"
                 value={solutionType}
+                disabled={Boolean(solution)}
                 onChange={(event) => setSolutionType(event.target.value as SolutionType)}
               >
                 {SOLUTION_TYPE_ORDER.map((type) => (
@@ -167,13 +188,8 @@ export function SolutionAddDialog({ open, task, defaultType, onClose, onSaved }:
         <Button onClick={onClose} disabled={saving}>
           Отмена
         </Button>
-        <Button
-          onClick={handleSave}
-          variant="contained"
-          startIcon={<AddIcon />}
-          disabled={saving || !task}
-        >
-          {saving ? "Сохранение…" : "Добавить"}
+        <Button onClick={handleSave} variant="contained" startIcon={<AddIcon />} disabled={saving || !task}>
+          {saving ? "Сохранение…" : solution ? "Сохранить" : "Добавить"}
         </Button>
       </DialogActions>
     </Dialog>

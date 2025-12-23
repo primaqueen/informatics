@@ -1,3 +1,5 @@
+import type { SolutionType } from "./solutions";
+
 export type AnswerType = "short_answer" | "single_choice" | "multiple_choice" | "unknown";
 
 export interface TaskOption {
@@ -10,6 +12,17 @@ export interface TaskOverride {
   hint?: string;
   options?: TaskOption[];
   question_md?: string;
+}
+
+export interface TaskSolution {
+  id: string;
+  type: SolutionType;
+  title?: string;
+  created_at?: string;
+  body: string;
+  meta?: Record<string, unknown>;
+  file?: string;
+  num?: number;
 }
 
 export interface Task {
@@ -29,6 +42,8 @@ export interface Task {
   attachments: Array<{ href: string; text: string }>;
   answer_type: AnswerType;
   options: TaskOption[];
+  answer: string | null;
+  solutions: TaskSolution[];
   meta: {
     "КЭС": string[];
     "Тип ответа": string;
